@@ -1,0 +1,23 @@
+.Status {
+    border: 1px var(--color) solid;
+    width: fit-content;
+}
+
+.StatusTitle {
+    color: var(--color);
+    border: var(--color) solid 1px;
+    text-align: center;
+    padding: 5px;
+}
+
+.ListStatus{
+    background-color: var(--background-color);
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    margin: 3px;
+}

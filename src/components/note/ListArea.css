@@ -1,0 +1,13 @@
+.ListArea {
+    width: 20%;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.NoteLink {
+    padding: 15px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
