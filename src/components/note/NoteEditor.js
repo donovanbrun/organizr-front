@@ -1,8 +1,8 @@
 import React from "react";
 import './NoteEditor.css';
-import EditArea from "./EditArea";
-import ListArea from "./ListArea";
-import { getNotes } from "../../services/NoteService";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { getNotes, saveNote, createNote, deleteNote } from "../../services/NoteService";
 
 class NoteEditor extends React.Component {
 
@@ -10,7 +10,8 @@ class NoteEditor extends React.Component {
         super(props);
         this.state = {
             notes: [],
-            selectedNoteId: 1 // tmp, replace with null after testing
+            note: null,
+            editMode : false
         };
     }
 
@@ -26,27 +27,109 @@ class NoteEditor extends React.Component {
         this.getNotes();
     }
 
-    updateNotes = () => {
-        this.getNotes();
+    handleChange = (event) => {
+        this.setState({
+            note: {
+                ...this.state.note,
+                content: event.target.value
+            }
+        })
+    }
+
+    handleNameChange = (event) => {
+        this.setState({
+            note: {
+                ...this.state.note,
+                name: event.target.value
+            }
+        })
+    }
+
+    newNote = () => {
+        this.setState({
+            note: {
+                id: null,
+                name: "",
+                content: "",
+                username: "Donovan"
+            }
+        })
+    }
+
+    saveNote = () => {
+        if (this.state.name !== "") {
+            if (this.state.note.id !== null) {
+                saveNote(this.state.note);
+            }
+            else {
+                createNote(this.state.note);
+            }
+        }
         this.forceUpdate();
     }
 
-    handleNoteChange = (id) => {
-        this.setState({
-            selectedNoteId: id
-        });
+    deleteNote = () => {
+        if (this.state.note.id !== null) {
+            deleteNote(this.state.note.id);
+        }
+        this.newNote();
+        this.forceUpdate();
     }
 
-    getSelectedNoteId = () => {
-        return this.state.selectedNoteId;
+    changeMode = () => {
+        this.setState({
+            editMode: !this.state.editMode
+        })
+    }
+
+    changeNote = (note) => {
+        console.log(note)
+        this.setState({
+            note: note
+        })
     }
 
     render() {
-        //<ListArea id="test" notes={this.state.notes} handleNoteChange={this.handleNoteChange}/>
+
+        const name = this.state.note?.name;
+        const content = this.state.note?.content;
+
+        const listNotes = this.state.notes.map(note => {
+            return (<a className="NoteInList" onClick={() => this.changeNote(note)}>{note.name}</a>)
+        })
+
         return (
             <div className="NoteEditor">
                 <h1 className="title">Notebook</h1>
-                <EditArea updateNotes={this.updateNotes} noteId={this.state.selectedNoteId} getSelectedNoteId={this.getSelectedNoteId}/>
+
+                <div className="EditArea">
+                    
+                    <div className="EditorHeader">
+                        <div className="ButtonsNote">
+                            <button onClick={this.newNote} className="Button">New note</button>
+                            <button onClick={this.saveNote} className="Button">Save note</button>
+                            <button onClick={this.deleteNote} className="Button">Delete note</button>
+                            <button onClick={this.changeMode} className="Button">Preview/Edit mode</button>
+                        </div>
+
+                        <div className="ListNotes">
+                            {listNotes}
+                        </div>
+
+                        <input placeholder="Name" value={name} onChange={this.handleNameChange} className="inputName"/>
+                    </div>
+
+                    {
+                        this.state.editMode ?
+                        <div id="editor">
+                            <textarea placeholder="Write here..." value={content} onChange={this.handleChange} className="textArea"></textarea>
+                        </div>
+                        :
+                        <div id="preview">
+                            <ReactMarkdown children={content} remarkPlugins={[remarkGfm]}></ReactMarkdown>
+                        </div>
+                    }
+                </div>
             </div>
         );
     }

@@ -13,30 +13,31 @@ function App() {
 
 	let date = new Date();
 
+	/*
+	<div className="header">
+		<p className='Date'>{date.toLocaleDateString()}</p>
+	</div>
+	*/
+
 	return (
 		<div className="App">
+
 			<BrowserRouter>
-				<div className="header">
-					<p className='Date'>{date.toLocaleDateString()}</p>
+				<div className="navigation">
+					{/*<Link to="/" className='NavLink'>HOME</Link>*/}
+					<Link to="/todo" className='NavLink'>TASK</Link>
+					<Link to="/event" className='NavLink'>EVENT</Link>
+					<Link to="/notebook" className='NavLink'>NOTE</Link>
 				</div>
 
 				<div className="container">
-					
 					<Routes>
-						<Route path="/" element={<Home />} />
+						{/* <Route path="/" element={<Home />} /> */}
 						<Route path="login" element={<Login />} />
 						<Route path="todo" element={<TaskManager />} />
 						<Route path="event" element={<EventManager />} />
 						<Route path="notebook" element={<NoteEditor />} />
 					</Routes>
-					
-				</div>
-
-				<div className="navigation">
-					<Link to="/" className='NavLink'>HOME</Link>
-					<Link to="/todo" className='NavLink'>TASK</Link>
-					<Link to="/event" className='NavLink'>EVENT</Link>
-					<Link to="/notebook" className='NavLink'>NOTE</Link>
 				</div>
 			</BrowserRouter>
 		</div>

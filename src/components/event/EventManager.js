@@ -31,9 +31,31 @@ class EventManager extends React.Component {
 
     render() {
 
+        const prochainement = this.state.events.filter(event => {return new Date(event.date) >= new Date()}).map(event => {
+            return (
+                <div className='Event'>
+                    <p className='EventText'>{event.name} - {new Date(event.date).toLocaleDateString()}</p>
+                </div>
+            )
+        });
+
+        const passe = this.state.events.filter(event => {return new Date(event.date) < new Date()}).map(event => {
+            return (
+                <div className='Event'>
+                    <p className='EventText'>{event.name} - {new Date(event.date).toLocaleDateString()}</p>
+                </div>
+            )
+        });
+
         return (
-            <div className=''>
-                <h1 className=''>Event Manager</h1>
+            <div className='EventManager'>
+                <h1 className='title'>Event Manager</h1>
+
+                <h2 className='subtitle'>Prochainement</h2>
+                {prochainement}
+
+                <h2 className='subtitle'>Passé</h2>
+                {passe}
             </div>
         );
     }
