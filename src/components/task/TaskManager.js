@@ -15,8 +15,7 @@ class TaskManager extends React.Component {
                 userId: "Donovan",
                 name: '',
                 description: '',
-                deadline: '',
-                finished: false
+                deadline: ''
             },
             selectedTask: null,
             showModal: false
@@ -64,8 +63,7 @@ class TaskManager extends React.Component {
                     userId: "Donovan",
                     name: '',
                     description: '',
-                    deadline: '',
-                    finished: false
+                    deadline: ''
                 }
             });
         }
@@ -118,38 +116,63 @@ class TaskManager extends React.Component {
 
         const newTask = this.state.newTask;
 
-        const tasks = this.state.tasks.filter(task => {return !task.finished}).map(task => {
+        const tresUrgent = this.state.tasks.filter(task => {return task.status === "Très urgent"}).map(task => {
             return (
                 <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} - {(new Date(task.deadline)).toLocaleDateString()}</p>
+                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
                 </div>
             )
         });
 
-        const tasksFinished = this.state.tasks.filter(task => {return task.finished}).map(task => {
+        const urgent = this.state.tasks.filter(task => {return task.status === "Urgent"}).map(task => {
             return (
                 <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} - {(new Date(task.deadline)).toLocaleDateString()}</p>
+                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
                 </div>
             )
         });
+
+        const normal = this.state.tasks.filter(task => {return task.status === "Normal"}).map(task => {
+            console.log(task.deadline)
+            return (
+                <div className='Task' onClick={e => this.handleOpenModal(task)}>
+                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+                </div>
+            )
+        });
+
+        const terminee = this.state.tasks.filter(task => {return task.status === "Terminée"}).map(task => {
+            return (
+                <div className='Task' onClick={e => this.handleOpenModal(task)}>
+                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+                </div>
+            )
+        });
+
+        /*
+        <div className='AddTask'>
+            <input type="text" className='Input' placeholder='Name' value={newTask.name} id="newTaskName" onChange={this.newTaskNameChanged}/>
+            <input type="text" className='Input' placeholder='Description' value={newTask.description} id="newTaskDescription" onChange={this.newTaskDescriptionChanged}/>
+            <input type="date" className='Input' placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={this.newTaskDeadlineChanged}/>
+            <button className='Button' onClick={this.addTask}>Add</button>
+        </div>
+        */
 
         return (
             <div className='TaskManager'>
                 <h1 className="title">Task Manager</h1>
 
-                <h2 className="subtitle">Active tasks</h2>
-                {tasks}
-                
-                <div className='AddTask'>
-                    <input type="text" className='Input' placeholder='Name' value={newTask.name} id="newTaskName" onChange={this.newTaskNameChanged}/>
-                    <input type="text" className='Input' placeholder='Description' value={newTask.description} id="newTaskDescription" onChange={this.newTaskDescriptionChanged}/>
-                    <input type="date" className='Input' placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={this.newTaskDeadlineChanged}/>
-                    <button className='Button' onClick={this.addTask}>Add</button>
-                </div>
+                <h2 className="subtitle">Très urgent</h2>
+                {tresUrgent}
 
-                <h2 className="subtitle">Finished tasks</h2>
-                {tasksFinished}
+                <h2 className="subtitle">Urgent</h2>
+                {urgent}
+
+                <h2 className="subtitle">Normal</h2>
+                {normal}
+
+                <h2 className="subtitle">Terminée</h2>
+                {terminee}
 
                 <ReactModal isOpen={this.state.showModal} className="Modal">
                     <Task task={this.state.selectedTask} closeModal={this.handleCloseModal}/>
