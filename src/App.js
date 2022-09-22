@@ -1,33 +1,15 @@
 import './App.css';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
-import Status from './components/home/status/Status';
 import Home from './components/home/Home';
 import { Link } from 'react-router-dom';
 import {BrowserRouter,Routes, Route} from "react-router-dom";
 import TaskManager from './components/task/TaskManager';
 import NoteEditor from './components/note/NoteEditor';
-import { AiOutlineHome } from 'react-icons/ai';
-import { MdOutlineTask } from 'react-icons/md';
-import { MdOutlineNoteAdd } from 'react-icons/md';
+import EventManager from './components/event/EventManager';
+import Login from './components/login/Login'
 
 function App() {
-
-	/*
-	<h1 className="title">Organizr</h1>
-			<div className='ListService'>
-				<Link to="/todo" className='ButtonService'>ToDo</Link>
-				<Link to="/notebook" className='ButtonService'>Notebook</Link>
-			</div>
-			<Status />
-			<TaskDisplayMin />
-
-
-			<div className="StatusZone">
-					<div className="liste">
-					</div>
-				</div>
-	*/
 
 	let date = new Date();
 
@@ -42,7 +24,9 @@ function App() {
 					
 					<Routes>
 						<Route path="/" element={<Home />} />
+						<Route path="login" element={<Login />} />
 						<Route path="todo" element={<TaskManager />} />
+						<Route path="event" element={<EventManager />} />
 						<Route path="notebook" element={<NoteEditor />} />
 					</Routes>
 					
@@ -51,6 +35,7 @@ function App() {
 				<div className="navigation">
 					<Link to="/" className='NavLink'>HOME</Link>
 					<Link to="/todo" className='NavLink'>TASK</Link>
+					<Link to="/event" className='NavLink'>EVENT</Link>
 					<Link to="/notebook" className='NavLink'>NOTE</Link>
 				</div>
 			</BrowserRouter>
