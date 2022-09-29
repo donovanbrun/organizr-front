@@ -1,7 +1,6 @@
 import axios from "axios";
 
-//const apiURL = "http://note.localhost";
-const apiURL = "http://localhost:8080";
+const apiURL = process.env.REACT_APP_API_URL;
 
 export const getStatus = () => {
     return axios.get(apiURL+"/api/note/status");

@@ -30,7 +30,7 @@
 }
 
 .NoteInList {
-    background-color: var(--background-color);
+    background-color: var(--primary-color);
     color: var(--color);
     padding: 5px;
 }

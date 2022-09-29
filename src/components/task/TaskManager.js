@@ -115,39 +115,41 @@ class TaskManager extends React.Component {
     render() {
 
         const newTask = this.state.newTask;
+        const tresUrgent = [];
+        const urgent = [];
+        const normal = [];
+        const terminee = [];
 
-        const tresUrgent = this.state.tasks.filter(task => {return task.status === "Très urgent"}).map(task => {
-            return (
-                <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                </div>
-            )
-        });
-
-        const urgent = this.state.tasks.filter(task => {return task.status === "Urgent"}).map(task => {
-            return (
-                <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                </div>
-            )
-        });
-
-        const normal = this.state.tasks.filter(task => {return task.status === "Normal"}).map(task => {
-            console.log(task.deadline)
-            return (
-                <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                </div>
-            )
-        });
-
-        const terminee = this.state.tasks.filter(task => {return task.status === "Terminée"}).map(task => {
-            return (
-                <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                </div>
-            )
-        });
+        this.state.tasks.forEach(task => {
+            if (task.status === "Très urgent") {
+                tresUrgent.push(
+                    <div className='Task' onClick={e => this.handleOpenModal(task)}>
+                        <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+                    </div>
+                )
+            }
+            else if (task.status === "Urgent") {
+                urgent.push(
+                    <div className='Task' onClick={e => this.handleOpenModal(task)}>
+                        <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+                    </div>
+                )
+            }
+            else if (task.status === "Normal") {
+                normal.push(
+                    <div className='Task' onClick={e => this.handleOpenModal(task)}>
+                        <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+                    </div>
+                )
+            }
+            else if (task.status === "Terminée") {
+                terminee.push(
+                    <div className='Task' onClick={e => this.handleOpenModal(task)}>
+                        <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+                    </div>
+                )
+            }
+        })
 
         /*
         <div className='AddTask'>
@@ -162,18 +164,30 @@ class TaskManager extends React.Component {
             <div className='TaskManager'>
                 <h1 className="title">Task Manager</h1>
 
-                <h2 className="subtitle">Très urgent</h2>
-                {tresUrgent}
+                <div className="Area1">
+                    <div className="TaskArea">
+                        <h2 className="subtitle">Très urgent</h2>
+                        {tresUrgent}
+                    </div>
 
-                <h2 className="subtitle">Urgent</h2>
-                {urgent}
+                    <div className="TaskArea">
+                        <h2 className="subtitle">Urgent</h2>
+                        {urgent}
+                    </div>
 
-                <h2 className="subtitle">Normal</h2>
-                {normal}
+                    <div className="TaskArea">
+                        <h2 className="subtitle">Normal</h2>
+                        {normal}
+                    </div>
+                </div>
 
-                <h2 className="subtitle">Terminée</h2>
-                {terminee}
-
+                <div className='Area2'>
+                    <h2 className="subtitle">Terminée</h2>
+                    <div className="TaskArea2">
+                        {terminee}
+                    </div>
+                </div>
+                
                 <ReactModal isOpen={this.state.showModal} className="Modal">
                     <Task task={this.state.selectedTask} closeModal={this.handleCloseModal}/>
                     <button className='Button' onClick={this.handleCloseModal}>Close</button>
