@@ -30,9 +30,15 @@
 }
 
 .NoteInList {
-    background-color: var(--primary-color);
-    color: var(--color);
+    cursor: pointer;
+    color: var(--primary-color);
+    border: var(--primary-color) 1px solid;
     padding: 5px;
+}
+
+.NoteInList:hover {
+    color: var(--color);
+    background-color: var(--primary-color);
 }
 
 #editor,

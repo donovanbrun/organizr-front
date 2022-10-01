@@ -1,8 +1,6 @@
 import React from 'react';
 import './TaskManager.css';
 import ReactModal from 'react-modal';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { Checkbox } from 'primereact/checkbox';
 import { getTasks, addTask, updateTask, deleteTask } from '../../services/TaskService';
 
 class TaskManager extends React.Component {
@@ -14,11 +12,12 @@ class TaskManager extends React.Component {
             newTask : {
                 userId: "Donovan",
                 name: '',
-                description: '',
-                deadline: ''
+                deadline: '',
+                status: ''
             },
             selectedTask: null,
-            showModal: false
+            showModal: false,
+            displayFinishTasks: false
         };
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -54,16 +53,14 @@ class TaskManager extends React.Component {
 
         if (this.state.newTask.name !== undefined && this.state.newTask.name !== "") {
         
-            addTask(this.state.newTask).then(() => {
-                this.fetchData();
-            });
+            addTask(this.state.newTask).then(this.fetchData);
             
             this.setState({
                 newTask : {
                     userId: "Donovan",
                     name: '',
-                    description: '',
-                    deadline: ''
+                    deadline: '',
+                    status: ''
                 }
             });
         }
@@ -78,11 +75,11 @@ class TaskManager extends React.Component {
         });
     }
 
-    newTaskDescriptionChanged = (event) => {
+    newTaskStatusChanged = (event) => {
         this.setState({
             newTask: {
                 ...this.state.newTask,
-                description: event.target.value
+                status: event.target.value
             }
         });
     }
@@ -112,6 +109,12 @@ class TaskManager extends React.Component {
             }, this.fetchData);
     }
 
+    displayFinishTasks = () => {
+        this.setState({
+            displayFinishTasks: !this.state.displayFinishTasks
+        })
+    }
+
     render() {
 
         const newTask = this.state.newTask;
@@ -120,45 +123,29 @@ class TaskManager extends React.Component {
         const normal = [];
         const terminee = [];
 
+        let taskDisplay = (task) => {
+            return (
+                <div className='Task' onClick={e => this.handleOpenModal(task)}>
+                    <p className='TaskName'>{task.name}</p>
+                    <p className='TaskDate'>{task.deadline !== null ? (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+                </div>
+            )
+        }
+
         this.state.tasks.forEach(task => {
             if (task.status === "Très urgent") {
-                tresUrgent.push(
-                    <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                        <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                    </div>
-                )
+                tresUrgent.push(taskDisplay(task))
             }
             else if (task.status === "Urgent") {
-                urgent.push(
-                    <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                        <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                    </div>
-                )
+                urgent.push(taskDisplay(task))
             }
             else if (task.status === "Normal") {
-                normal.push(
-                    <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                        <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                    </div>
-                )
+                normal.push(taskDisplay(task))
             }
             else if (task.status === "Terminée") {
-                terminee.push(
-                    <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                        <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                    </div>
-                )
+                terminee.push(taskDisplay(task))
             }
         })
-
-        /*
-        <div className='AddTask'>
-            <input type="text" className='Input' placeholder='Name' value={newTask.name} id="newTaskName" onChange={this.newTaskNameChanged}/>
-            <input type="text" className='Input' placeholder='Description' value={newTask.description} id="newTaskDescription" onChange={this.newTaskDescriptionChanged}/>
-            <input type="date" className='Input' placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={this.newTaskDeadlineChanged}/>
-            <button className='Button' onClick={this.addTask}>Add</button>
-        </div>
-        */
 
         return (
             <div className='TaskManager'>
@@ -181,11 +168,22 @@ class TaskManager extends React.Component {
                     </div>
                 </div>
 
+                <div className='AddTask'>
+                    <input type="text" className='Input' placeholder='Name' value={newTask.name} id="newTaskName" onChange={this.newTaskNameChanged}/>
+                    <input type="date" className='Input' placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={this.newTaskDeadlineChanged}/>
+                    <input type="text" className='Input' placeholder='Status' value={newTask.status} id="newTaskStatus" onChange={this.newTaskStatusChanged}/>
+                    <button className='Button' onClick={this.addTask}>Add</button>
+                </div>
+
                 <div className='Area2'>
                     <h2 className="subtitle">Terminée</h2>
-                    <div className="TaskArea2">
-                        {terminee}
-                    </div>
+                    <button className='Button' onClick={this.displayFinishTasks}> {this.state.displayFinishTasks ? "Unshow" : "Show"} </button>
+                    { 
+                        this.state.displayFinishTasks 
+                        ? <div className="TaskArea2"> {terminee} </div>
+                        : null
+                    }
+                    
                 </div>
                 
                 <ReactModal isOpen={this.state.showModal} className="Modal">
@@ -225,7 +223,6 @@ class Task extends React.Component {
     }
 
     handleDeadlineChanged = (event) => {
-        console.log(event.target.value);
         this.setState({
             task: {
                 ...this.state.task,
@@ -234,11 +231,11 @@ class Task extends React.Component {
         });
     }
 
-    handleFinishedChanged = (event) => {
+    handleStatusChanged = (event) => {
         this.setState({
             task: {
                 ...this.state.task,
-                finished: event.target.checked
+                status: event.target.value
             }
         });
     }
@@ -262,23 +259,20 @@ class Task extends React.Component {
         const name = this.state.task?.name;
         const deadline = this.state.task?.deadline;
         const description = this.state.task?.description;
-        const finished = this.state.task?.finished;
+        const status = this.state.task?.status;
 
         return (
             <div className='TaskModal'>
-                <h1 className="title">Task Editing</h1>
+                <h1 className='title'>Task Editing</h1>
                 <div className='TaskFormModal'>
                     <h3>Name</h3>
                     <input type='text' className='Input' value={name} onChange={this.handleNameChanged}/>
                     <h3>Deadline</h3>
-                    <input type="date" className='Input' placeholder='Date' value={(new Date(deadline)).toString()} onChange={this.handleDeadlineChanged}/>
+                    <input type='date' className='Input' value={deadline} onChange={this.handleDeadlineChanged}/>
                     <h3>Description</h3>
-                    <InputTextarea autoResize={true} value={description} onChange={this.handleDescriptionChanged}/>
-                    <div>
-                        <h3>Status</h3>
-                        <label htmlFor="isFinished" className="p-checkbox-label">Finished</label>
-                        <Checkbox inputId="isFinished" onChange={this.handleFinishedChanged} checked={finished}/>
-                    </div>
+                    <textarea className='Input' value={description} onChange={this.handleDescriptionChanged} style={{resize: 'none'}}/>
+                    <h3>Status</h3>
+                    <input type='text' className='Input' value={status} onChange={this.handleStatusChanged}/>
                 </div>
                 <div className='TaskModalButtons'>
                     <button className='Button' onClick={this.updateTask}>Save</button>

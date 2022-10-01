@@ -19,7 +19,7 @@ class NoteEditor extends React.Component {
         getNotes().then(notes => {
             this.setState({
                 notes: notes.data
-            });
+            }, this.forceUpdate);
         });
     }
 
@@ -59,21 +59,20 @@ class NoteEditor extends React.Component {
     saveNote = () => {
         if (this.state.name !== "") {
             if (this.state.note.id !== null) {
-                saveNote(this.state.note);
+                saveNote(this.state.note).then(this.getNotes);
             }
             else {
-                createNote(this.state.note);
+                createNote(this.state.note).then(this.getNotes);
             }
         }
-        this.forceUpdate();
+        this.getNotes();
     }
 
     deleteNote = () => {
         if (this.state.note.id !== null) {
-            deleteNote(this.state.note.id);
+            deleteNote(this.state.note.id).then(this.getNotes);
         }
         this.newNote();
-        this.forceUpdate();
     }
 
     changeMode = () => {
@@ -83,7 +82,6 @@ class NoteEditor extends React.Component {
     }
 
     changeNote = (note) => {
-        console.log(note)
         this.setState({
             note: note
         })
@@ -109,6 +107,8 @@ class NoteEditor extends React.Component {
                             <button onClick={this.newNote} className="Button">New note</button>
                             <button onClick={this.saveNote} className="Button">Save note</button>
                             <button onClick={this.deleteNote} className="Button">Delete note</button>
+                        </div>
+                        <div className="ButtonsNote">
                             <button onClick={this.changeMode} className="Button">Preview/Edit mode</button>
                         </div>
 

@@ -1,6 +1,4 @@
 import './App.css';
-import 'primereact/resources/primereact.min.css';
-import 'primereact/resources/themes/saga-blue/theme.css';
 import Home from './components/home/Home';
 import Nav from './components/nav/Nav';
 import {BrowserRouter,Routes, Route} from "react-router-dom";

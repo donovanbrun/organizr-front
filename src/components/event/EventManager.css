@@ -6,6 +6,7 @@
 }
 
 .Event {
+    cursor: pointer;
     width: fit-content;
     height: fit-content;
     display: flex;
@@ -20,4 +21,23 @@
 
 .EventText {
     color: var(--color);
+}
+
+.AddEvent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    padding: 10px;
+    width: fit-content;
+}
+
+.AddEvent > * {
+    margin: 6px;
+}
+
+@media (max-width: 768px) {
+    .AddEvent {
+        flex-direction: column;
+    }
 }
