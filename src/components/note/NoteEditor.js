@@ -1,138 +1,103 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import './NoteEditor.css';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getNotes, saveNote, createNote, deleteNote } from "../../services/NoteService";
 
-class NoteEditor extends React.Component {
+export default function NoteEditor() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            notes: [],
-            note: null,
-            editMode : false
-        };
-    }
+    const [notes, setNotes] = useState([]);
+    const [note, setNote] = useState(null);
+    const [editMode, setEditMode] = useState(false);
 
-    getNotes = () => {
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    let fetchData = () => {
         getNotes().then(notes => {
-            this.setState({
-                notes: notes.data
-            }, this.forceUpdate);
+            setNotes(notes.data);
         });
     }
 
-    componentDidMount() {
-        this.getNotes();
-    }
-
-    handleChange = (event) => {
-        this.setState({
-            note: {
-                ...this.state.note,
-                content: event.target.value
-            }
+    let handleChange = (event) => {
+        setNote({
+            ...note,
+            content: event.target.value
         })
     }
 
-    handleNameChange = (event) => {
-        this.setState({
-            note: {
-                ...this.state.note,
-                name: event.target.value
-            }
+    let handleNameChange = (event) => {
+        setNote({
+            ...note,
+            name: event.target.value
         })
     }
 
-    newNote = () => {
-        this.setState({
-            note: {
-                id: null,
-                name: "",
-                content: "",
-                username: "Donovan"
-            }
+    let newNote = () => {
+        setNote({
+            id: null,
+            name: "",
+            content: "",
+            username: "Donovan"
         })
     }
 
-    saveNote = () => {
-        if (this.state.name !== "") {
-            if (this.state.note.id !== null) {
-                saveNote(this.state.note).then(this.getNotes);
+    let handleSaveNote = () => {
+        if (note.name !== "") {
+            if (note.id !== null) {
+                saveNote(note).then(fetchData);
             }
             else {
-                createNote(this.state.note).then(this.getNotes);
+                createNote(note).then(fetchData);
             }
         }
-        this.getNotes();
     }
 
-    deleteNote = () => {
-        if (this.state.note.id !== null) {
-            deleteNote(this.state.note.id).then(this.getNotes);
+    let handleDeleteNote = () => {
+        if (note.id !== null) {
+            deleteNote(note.id).then(fetchData);
         }
-        this.newNote();
+        newNote();
     }
 
-    changeMode = () => {
-        this.setState({
-            editMode: !this.state.editMode
-        })
-    }
+    const listNotes = notes.map(note => {
+        return (<p className="NoteInList" onClick={() => setNote(note)}>{note.name}</p>)
+    })
 
-    changeNote = (note) => {
-        this.setState({
-            note: note
-        })
-    }
+    return (
+        <div className="NoteEditor">
+            <h1 className="title">Notebook</h1>
 
-    render() {
-
-        const name = this.state.note?.name;
-        const content = this.state.note?.content;
-
-        const listNotes = this.state.notes.map(note => {
-            return (<a className="NoteInList" onClick={() => this.changeNote(note)}>{note.name}</a>)
-        })
-
-        return (
-            <div className="NoteEditor">
-                <h1 className="title">Notebook</h1>
-
-                <div className="EditArea">
-                    
-                    <div className="EditorHeader">
-                        <div className="ButtonsNote">
-                            <button onClick={this.newNote} className="Button">New note</button>
-                            <button onClick={this.saveNote} className="Button">Save note</button>
-                            <button onClick={this.deleteNote} className="Button">Delete note</button>
-                        </div>
-                        <div className="ButtonsNote">
-                            <button onClick={this.changeMode} className="Button">Preview/Edit mode</button>
-                        </div>
-
-                        <div className="ListNotes">
-                            {listNotes}
-                        </div>
-
-                        <input placeholder="Name" value={name} onChange={this.handleNameChange} className="inputName"/>
+            <div className="EditArea">
+                <div className="EditorHeader">
+                    <div className="ButtonsNote">
+                        <button onClick={newNote} className="Button">New note</button>
+                        <button onClick={handleSaveNote} className="Button">Save note</button>
+                        <button onClick={handleDeleteNote} className="Button">Delete note</button>
+                    </div>
+                    <div className="ButtonsNote">
+                        <button onClick={() => setEditMode(!editMode)} className="Button">Preview/Edit mode</button>
                     </div>
 
-                    {
-                        this.state.editMode ?
-                        <div id="editor">
-                            <textarea placeholder="Write here..." value={content} onChange={this.handleChange} className="textArea"></textarea>
-                        </div>
-                        :
-                        <div id="preview">
-                            <ReactMarkdown children={content} remarkPlugins={[remarkGfm]}></ReactMarkdown>
-                        </div>
-                    }
-                </div>
-            </div>
-        );
-    }
-}
+                    <div className="ListNotes">
+                        {listNotes}
+                    </div>
 
-export default NoteEditor;
+                    <input placeholder="Name" value={note?.name} onChange={handleNameChange} className="inputName"/>
+                </div>
+
+                {
+                    editMode ?
+                    <div id="editor">
+                        <textarea placeholder="Write here..." value={note?.content} onChange={handleChange} className="textArea"></textarea>
+                    </div>
+                    :
+                    <div id="preview">
+                        <ReactMarkdown children={note?.content} remarkPlugins={[remarkGfm]}></ReactMarkdown>
+                    </div>
+                }
+            </div>
+        </div>
+    )
+}
