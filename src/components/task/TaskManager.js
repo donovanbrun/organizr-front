@@ -1,30 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './TaskManager.css';
 import ReactModal from 'react-modal';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { Checkbox } from 'primereact/checkbox';
 import { getTasks, addTask, updateTask, deleteTask } from '../../services/TaskService';
 
-class TaskManager extends React.Component {
+export default function TaskManager() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            tasks: [],
-            newTask : {
-                userId: "Donovan",
-                name: '',
-                description: '',
-                deadline: ''
-            },
-            selectedTask: null,
-            showModal: false
-        };
-        this.handleOpenModal = this.handleOpenModal.bind(this);
-        this.handleCloseModal = this.handleCloseModal.bind(this);
-    }
+    const [tasks, setTasks] = useState([]);
+    const [newTask, setNewTask] = useState({
+        userId: "Donovan",
+        name: '',
+        deadline: '',
+        status: ''
+    });
+    const [selectedTask, setSelectedTask] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [displayFinishTasks, setDisplayFinishTasks] = useState(false);
 
-    fetchData = ()  => {
+    let fetchData = ()  => {
         getTasks().then(tasksData => {
             let tasks = tasksData.data;
 
@@ -38,241 +30,200 @@ class TaskManager extends React.Component {
                 return 0;
             });
 
-            this.setState({
-                tasks: tasks
-            });
+            setTasks(tasks);
         });
-
-        this.forceUpdate();
     }
 
-    componentDidMount() {
-        this.fetchData();
-    }
+    useEffect(() => {
+        fetchData()
+    }, [])
 
-    addTask = () => {
+    let handleAddTask = () => {
 
-        if (this.state.newTask.name !== undefined && this.state.newTask.name !== "") {
+        if (newTask.name !== undefined && newTask.name !== "") {
         
-            addTask(this.state.newTask).then(() => {
-                this.fetchData();
-            });
+            addTask(newTask).then(fetchData);
             
-            this.setState({
-                newTask : {
-                    userId: "Donovan",
-                    name: '',
-                    description: '',
-                    deadline: ''
-                }
+            setNewTask({
+                userId: "Donovan",
+                name: '',
+                deadline: '',
+                status: ''
             });
         }
     }
 
-    newTaskNameChanged = (event) => {
-        this.setState({
-            newTask: {
-                ...this.state.newTask,
-                name: event.target.value
-            }
+    let newTaskNameChanged = (event) => {
+        setNewTask({
+            ...newTask,
+            name: event.target.value
         });
     }
 
-    newTaskDescriptionChanged = (event) => {
-        this.setState({
-            newTask: {
-                ...this.state.newTask,
-                description: event.target.value
-            }
+    let newTaskStatusChanged = (event) => {
+        setNewTask({
+            ...newTask,
+            status: event.target.value
         });
     }
 
-    newTaskDeadlineChanged = (event) => {
-        this.setState({
-            newTask: {
-                ...this.state.newTask,
-                deadline: event.target.value
-            }
+    let newTaskDeadlineChanged = (event) => {
+        setNewTask({
+            ...newTask,
+            deadline: event.target.value
         });
     }
 
-    handleOpenModal (task) {
-        this.setState(
-            { 
-                showModal: true,
-                selectedTask: task
-            });
+    let handleOpenModal = (task) => {
+        setShowModal(true);
+        setSelectedTask(task);
     }
     
-    handleCloseModal () {
-        this.setState(
-            { 
-                showModal: false,
-                selectedTask: null
-            }, this.fetchData);
+    let handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedTask(null);
+        fetchData();
     }
 
-    render() {
+    let handleDisplayFinishTasks = () => {
+        setDisplayFinishTasks(!displayFinishTasks);
+    }
 
-        const newTask = this.state.newTask;
+    const tresUrgent = [];
+    const urgent = [];
+    const normal = [];
+    const terminee = [];
 
-        const tresUrgent = this.state.tasks.filter(task => {return task.status === "Très urgent"}).map(task => {
-            return (
-                <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                </div>
-            )
-        });
-
-        const urgent = this.state.tasks.filter(task => {return task.status === "Urgent"}).map(task => {
-            return (
-                <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                </div>
-            )
-        });
-
-        const normal = this.state.tasks.filter(task => {return task.status === "Normal"}).map(task => {
-            console.log(task.deadline)
-            return (
-                <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                </div>
-            )
-        });
-
-        const terminee = this.state.tasks.filter(task => {return task.status === "Terminée"}).map(task => {
-            return (
-                <div className='Task' onClick={e => this.handleOpenModal(task)}>
-                    <p className='TaskText'>{task.name} {task.deadline !== null ? " - " + (new Date(task.deadline)).toLocaleDateString() : ""}</p>
-                </div>
-            )
-        });
-
-        /*
-        <div className='AddTask'>
-            <input type="text" className='Input' placeholder='Name' value={newTask.name} id="newTaskName" onChange={this.newTaskNameChanged}/>
-            <input type="text" className='Input' placeholder='Description' value={newTask.description} id="newTaskDescription" onChange={this.newTaskDescriptionChanged}/>
-            <input type="date" className='Input' placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={this.newTaskDeadlineChanged}/>
-            <button className='Button' onClick={this.addTask}>Add</button>
-        </div>
-        */
-
+    let taskDisplay = (task) => {
         return (
-            <div className='TaskManager'>
-                <h1 className="title">Task Manager</h1>
-
-                <h2 className="subtitle">Très urgent</h2>
-                {tresUrgent}
-
-                <h2 className="subtitle">Urgent</h2>
-                {urgent}
-
-                <h2 className="subtitle">Normal</h2>
-                {normal}
-
-                <h2 className="subtitle">Terminée</h2>
-                {terminee}
-
-                <ReactModal isOpen={this.state.showModal} className="Modal">
-                    <Task task={this.state.selectedTask} closeModal={this.handleCloseModal}/>
-                    <button className='Button' onClick={this.handleCloseModal}>Close</button>
-                </ReactModal>
+            <div className='Task' onClick={e => handleOpenModal(task)}>
+                <p className='TaskName'>{task.name}</p>
+                <p className='TaskDate'>{task.deadline !== null ? (new Date(task.deadline)).toLocaleDateString() : ""}</p>
             </div>
-        );
+        )
     }
+
+    tasks.forEach(task => {
+        if (task.status === "Très urgent") {
+            tresUrgent.push(taskDisplay(task))
+        }
+        else if (task.status === "Urgent") {
+            urgent.push(taskDisplay(task))
+        }
+        else if (task.status === "Normal") {
+            normal.push(taskDisplay(task))
+        }
+        else if (task.status === "Terminée") {
+            terminee.push(taskDisplay(task))
+        }
+    })
+
+    return (
+        <div className='TaskManager'>
+            <h1 className="title">Task Manager</h1>
+
+            <div className="Area1">
+                <div className="TaskArea">
+                    <h2 className="subtitle">Très urgent</h2>
+                    {tresUrgent}
+                </div>
+
+                <div className="TaskArea">
+                    <h2 className="subtitle">Urgent</h2>
+                    {urgent}
+                </div>
+
+                <div className="TaskArea">
+                    <h2 className="subtitle">Normal</h2>
+                    {normal}
+                </div>
+            </div>
+
+            <div className='AddTask'>
+                <input type="text" className='Input' placeholder='Name' value={newTask.name} id="newTaskName" onChange={newTaskNameChanged}/>
+                <input type="date" className='Input' placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={newTaskDeadlineChanged}/>
+                <input type="text" className='Input' placeholder='Status' value={newTask.status} id="newTaskStatus" onChange={newTaskStatusChanged}/>
+                <button className='Button' onClick={handleAddTask}>Add</button>
+            </div>
+
+            <div className='Area2'>
+                <h2 className="subtitle">Terminée</h2>
+                <button className='Button' onClick={handleDisplayFinishTasks}> {displayFinishTasks ? "Unshow" : "Show"} </button>
+                { 
+                    displayFinishTasks 
+                    ? <div className="TaskArea2"> {terminee} </div>
+                    : null
+                }
+                
+            </div>
+            
+            <ReactModal isOpen={showModal} className="Modal">
+                <TaskModal selectedTask={selectedTask} closeModal={handleCloseModal}/>
+                <button className='Button' onClick={handleCloseModal}>Close</button>
+            </ReactModal>
+        </div>
+    )
 }
 
-class Task extends React.Component {
+function TaskModal({selectedTask, closeModal}) {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            task: props.task
-        };
-    }
+    const [task, setTask] = useState(selectedTask);
 
-    handleNameChanged = (event) => {
-        this.setState({
-            task: {
-                ...this.state.task,
-                name: event.target.value
-            }
-        });
-    }
+    let handleNameChanged = (event) => {
+        setTask({
+            ...task,
+            name: event.target.value
+        })
+    };
 
-    handleDescriptionChanged = (event) => {
-        this.setState({
-            task: {
-                ...this.state.task,
-                description: event.target.value
-            }
-        });
-    }
+    let handleDescriptionChanged = (event) => {
+        setTask({
+            ...task,
+            description: event.target.value
+        })
+    };
 
-    handleDeadlineChanged = (event) => {
-        console.log(event.target.value);
-        this.setState({
-            task: {
-                ...this.state.task,
-                deadline: event.target.value
-            }
-        });
-    }
+    let handleDeadlineChanged = (event) => {
+        setTask({
+            ...task,
+            deadline: event.target.value
+        })
+    };
 
-    handleFinishedChanged = (event) => {
-        this.setState({
-            task: {
-                ...this.state.task,
-                finished: event.target.checked
-            }
-        });
-    }
+    let handleStatusChanged = (event) => {
+        setTask({
+            ...task,
+            status: event.target.value
+        })
+    };
 
-    updateTask= () => {
-        if (this.state.task?.name !== undefined && this.state.task?.name !== "") {
-            updateTask(this.state.task).then(() => {
-                this.props.closeModal();
-            });
+    let handleUpdateTask = () => {
+        if (task?.name !== undefined && task?.name !== "") {
+            updateTask(task).then(closeModal);
         }
     }
 
-    deleteTask = () => {
-        deleteTask(this.state.task?.id).then(() => {
-            this.props.closeModal();
-        });
+    let handleDeleteTask = () => {
+        deleteTask(task?.id).then(closeModal);
     }
 
-    render() {
-
-        const name = this.state.task?.name;
-        const deadline = this.state.task?.deadline;
-        const description = this.state.task?.description;
-        const finished = this.state.task?.finished;
-
-        return (
-            <div className='TaskModal'>
-                <h1 className="title">Task Editing</h1>
-                <div className='TaskFormModal'>
-                    <h3>Name</h3>
-                    <input type='text' className='Input' value={name} onChange={this.handleNameChanged}/>
-                    <h3>Deadline</h3>
-                    <input type="date" className='Input' placeholder='Date' value={(new Date(deadline)).toString()} onChange={this.handleDeadlineChanged}/>
-                    <h3>Description</h3>
-                    <InputTextarea autoResize={true} value={description} onChange={this.handleDescriptionChanged}/>
-                    <div>
-                        <h3>Status</h3>
-                        <label htmlFor="isFinished" className="p-checkbox-label">Finished</label>
-                        <Checkbox inputId="isFinished" onChange={this.handleFinishedChanged} checked={finished}/>
-                    </div>
-                </div>
-                <div className='TaskModalButtons'>
-                    <button className='Button' onClick={this.updateTask}>Save</button>
-                    <button className='Button' onClick={this.deleteTask}>Delete</button>
-                </div>
+    return (
+        <div className='TaskModal'>
+            <h1 className='title'>Task Editing</h1>
+            <div className='TaskFormModal'>
+                <h3>Name</h3>
+                <input type='text' className='Input' value={task.name} onChange={handleNameChanged}/>
+                <h3>Deadline</h3>
+                <input type='date' className='Input' value={task.deadline} onChange={handleDeadlineChanged}/>
+                <h3>Description</h3>
+                <textarea className='Input' value={task.description} onChange={handleDescriptionChanged} style={{resize: 'none'}}/>
+                <h3>Status</h3>
+                <input type='text' className='Input' value={task.status} onChange={handleStatusChanged}/>
             </div>
-        );
-    }
+            <div className='TaskModalButtons'>
+                <button className='Button' onClick={handleUpdateTask}>Save</button>
+                <button className='Button' onClick={handleDeleteTask}>Delete</button>
+            </div>
+        </div>
+    )
 }
-
-export default TaskManager;

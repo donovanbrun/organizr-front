@@ -13,13 +13,13 @@
 
 .title {
     text-align: center;
-    color: var(--background-color);
+    color: var(--primary-color);
     padding: 10px;
 }
 
 .subtitle {
     text-align: center;
-    color: var(--background-color);
+    color: var(--primary-color);
     padding: 5px;
 }
 
@@ -44,21 +44,4 @@
     width: 100%;
     padding: 10px;
     /*overflow-y: auto;*/
-}
-
-.navigation{
-    height: fit-content;
-    width: fit-content;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.NavLink {
-    color: var(--color);
-    background-color: var(--background-color);
-    border-radius: 10px;
-    margin: 10px;
-    text-decoration: none;
-    padding: 10px;
 }

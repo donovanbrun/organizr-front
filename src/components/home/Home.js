@@ -1,7 +1,7 @@
 import './Home.css';
 import TaskDisplayMin from '../task/TaskDisplayMin';
 
-function Home() {
+export default function Home() {
 
 	return (
 		<div className="Home">
@@ -9,5 +9,3 @@ function Home() {
 		</div>
 	);
 }
-
-export default Home;
