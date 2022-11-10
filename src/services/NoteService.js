@@ -19,6 +19,7 @@ export const createNote = (note) => {
 }
 
 export const saveNote = (note) => {
+    console.log(note)
     return axios.put(apiURL+"/api/note", note);
 }
 

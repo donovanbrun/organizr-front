@@ -17,7 +17,7 @@ class TaskDisplayMin extends React.Component {
             let tasks = tasksData.data;
 
             tasks = tasks.filter((task) => {
-                return (task.finished === false);
+                return (task.status !== "Terminée");
             });
 
             tasks.sort((a, b) => {
@@ -46,7 +46,7 @@ class TaskDisplayMin extends React.Component {
 
         return (
             <div className='TaskDisplayMin'>
-                <h2 className='TaskDisplayMinTitle'>Five next tasks</h2>
+                <h2 className='subtitle'>Five next tasks</h2>
                 <table className='TaskDisplayMinTable'>
                     <thead>
                         <tr className='TaskDisplayMinTable'>

@@ -25,7 +25,8 @@ function App() {
 
 				<div className="container">
 					<Routes>
-						<Route path="/" element={<Home />} />
+						{/*<Route path="/" element={<Home />} />*/}
+                        <Route path="/" element={<TaskManager />} />
 						<Route path="login" element={<Login />} />
 						<Route path="todo" element={<TaskManager />} />
 						<Route path="event" element={<EventManager />} />

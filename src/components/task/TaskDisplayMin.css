@@ -1,24 +1,20 @@
 .TaskDisplayMin {
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
     display: column;
     align-items: center;
     justify-content: center;
-    border: var(--color) 1px solid;
-}
-
-.TaskDisplayMinTitle {
-    color: var(--color);
-    text-align: center;
-    padding: 5px;
 }
 
 .TaskDisplayMinTable {
     width: 100%;
-    border: var(--color) 1px solid;
+    background-color: var(--primary-color);
+    border-radius: 20px;
+    padding: 20px;
 }
 
 .TaskDisplayText {
     color: var(--color);
-    border: var(--color) 1px solid;
-    text-align: center;
     font-size: 16px;
 }

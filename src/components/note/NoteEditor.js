@@ -2,13 +2,20 @@ import React, { useState, useEffect } from "react";
 import './NoteEditor.css';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getNotes, saveNote, createNote, deleteNote } from "../../services/NoteService";
+import { getNotes, saveNote, deleteNote } from "../../services/NoteService";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function NoteEditor() {
 
     const [notes, setNotes] = useState([]);
-    const [note, setNote] = useState(null);
+    const [note, setNote] = useState({
+        id: uuidv4(),
+        name: "",
+        content: "",
+        userId: "Donovan"
+    });
     const [editMode, setEditMode] = useState(false);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         fetchData()
@@ -16,7 +23,16 @@ export default function NoteEditor() {
 
     let fetchData = () => {
         getNotes().then(notes => {
-            setNotes(notes.data);
+            let sortedNotes = notes.data.sort((a, b) => {
+                if (a.name > b.name) {
+                    return 1;
+                }
+                if (a.name <= b.name) {
+                    return -1;
+                }
+                return 0;
+            });
+            setNotes(sortedNotes);
         });
     }
 
@@ -36,67 +52,66 @@ export default function NoteEditor() {
 
     let newNote = () => {
         setNote({
-            id: null,
+            id: uuidv4(),
             name: "",
             content: "",
-            username: "Donovan"
+            userId: "Donovan"
         })
     }
 
     let handleSaveNote = () => {
-        if (note.name !== "") {
-            if (note.id !== null) {
-                saveNote(note).then(fetchData);
-            }
-            else {
-                createNote(note).then(fetchData);
-            }
-        }
+        saveNote(note).then(fetchData);
     }
 
     let handleDeleteNote = () => {
-        if (note.id !== null) {
-            deleteNote(note.id).then(fetchData);
-        }
+        deleteNote(note.id).then(fetchData);
         newNote();
     }
 
-    const listNotes = notes.map(note => {
-        return (<p className="NoteInList" onClick={() => setNote(note)}>{note.name}</p>)
+    const listNotes = notes.map(n => {
+        if (search === "" || n.name.toLowerCase().includes(search.toString().toLowerCase())) {
+            if (n?.id === note?.id) {
+                return (<p className="NoteInListSelected" onClick={() => setNote(n)}>{n.name}</p>)
+            } 
+            return (<p className="NoteInList" onClick={() => setNote(n)}>{n.name}</p>)
+        }
+        return null;
     })
 
     return (
         <div className="NoteEditor">
             <h1 className="title">Notebook</h1>
 
-            <div className="EditArea">
+            <div className="NoteArea">
                 <div className="EditorHeader">
                     <div className="ButtonsNote">
                         <button onClick={newNote} className="Button">New note</button>
                         <button onClick={handleSaveNote} className="Button">Save note</button>
                         <button onClick={handleDeleteNote} className="Button">Delete note</button>
-                    </div>
-                    <div className="ButtonsNote">
                         <button onClick={() => setEditMode(!editMode)} className="Button">Preview/Edit mode</button>
                     </div>
 
-                    <div className="ListNotes">
-                        {listNotes}
-                    </div>
-
-                    <input placeholder="Name" value={note?.name} onChange={handleNameChange} className="inputName"/>
+                    <input placeholder="Name" value={note?.name} onChange={handleNameChange} className="Input"/>
                 </div>
 
-                {
-                    editMode ?
-                    <div id="editor">
-                        <textarea placeholder="Write here..." value={note?.content} onChange={handleChange} className="textArea"></textarea>
+                <div className="EditorArea">
+                    <div className="ListNotes">
+                        <h1 className="subtitle">Notes</h1>
+                        <input placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} className="Input"/>
+                        {listNotes}
                     </div>
-                    :
-                    <div id="preview">
-                        <ReactMarkdown children={note?.content} remarkPlugins={[remarkGfm]}></ReactMarkdown>
-                    </div>
-                }
+                
+                    {
+                        editMode ?
+                        <div id="Editor">
+                            <textarea placeholder="Write here..." value={note?.content} onChange={handleChange} className="TextArea"></textarea>
+                        </div>
+                        :
+                        <div id="Preview">
+                            <ReactMarkdown children={note?.content} remarkPlugins={[remarkGfm]}></ReactMarkdown>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     )
