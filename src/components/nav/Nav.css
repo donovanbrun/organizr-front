@@ -1,5 +1,5 @@
 .Nav {
-    background-color: #34495E;
+    background-color: var(--primary-color);
     height: fit-content;
     width: 100%;
     padding: 10px;
@@ -19,19 +19,37 @@
     color: var(--color);
     cursor: pointer;
     text-decoration: none;
-    font-size: xx-large;
     margin-left: 10px;
+    font-size: xx-large;
+}
+
+.NavLinks {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 10px;
 }
 
 .NavLink {
     color: var(--color);
-    background-color: #202e3b;
+    background-color: var(--secondary-color);
     border-radius: 10px;
-    margin: 10px;
     padding: 10px;
     text-decoration: none;
 }
 
 .NavLink:hover {
-    background-color: #425c76;
+    background-color: var(--accent2-color);
+}
+
+.DarkmodeButton {
+    border: none;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

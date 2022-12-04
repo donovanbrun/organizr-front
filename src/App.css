@@ -4,44 +4,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: lightgrey;
+    background-color: var(--background);
 }
 
 :root::-webkit-scrollbar, :root::-webkit-scrollbar-track, :root::-webkit-scrollbar-thumb {
     width: 0px;
 }
 
-.title {
-    text-align: center;
-    color: var(--primary-color);
-    padding: 10px;
-}
-
-.subtitle {
-    text-align: center;
-    color: var(--primary-color);
-    padding: 5px;
-}
-
-/*
-.header{
-    height: fit-content;
-    width: fit-content;
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.Date {
-    color: var(--color);
-    font-size: 20px;
-}
-*/
-
 .container{
     height: fit-content;
     width: 100%;
     padding: 10px;
-    background-color: lightgrey;
+    background-color: var(--background);
 }

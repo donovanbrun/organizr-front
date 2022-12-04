@@ -3,6 +3,18 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
+import { getUserId } from './services/LoginService';
+
+axios.interceptors.request.use(
+    config => {
+        config.headers['userId'] = getUserId()
+        return config
+    },
+    error => {
+        Promise.reject(error)
+    }
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

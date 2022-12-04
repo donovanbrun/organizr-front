@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
+    background-color: var(--background);
 }
 
 .Area1 {
@@ -23,8 +24,7 @@
 
 .TaskArea {
     padding: 10px;
-    /*background-color: rgb(229, 231, 233);*/
-    background-color: white;
+    background-color: var(--primary-color);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -33,12 +33,12 @@
 
 .TaskArea2 {
     padding: 10px;
-    /*background-color: rgb(229, 231, 233);*/
-    background-color: white;
+    background-color: var(--primary-color);
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    gap: 10px;
     flex-wrap: wrap;
     height: fit-content;
 }
@@ -52,10 +52,14 @@
     justify-content: center;
     flex-direction: column;
     padding: 10px;
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     border-radius: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.Task:hover {
+    background-color: var(--accent2-color);
 }
 
 .TaskName, .TaskDate {
@@ -79,7 +83,6 @@
     margin: 6px;
 }
 
-
 .Modal {
     display: flex;
     align-items: center;
@@ -97,9 +100,9 @@
     height: fit-content;
     padding: 30px;
     margin: 30px;
-    color: var(--primary-color);
+    color: var(--color);
     opacity: 100%;
-    background-color: white;
+    background-color: var(--background);
     border-radius: 10px;
     border: 1px solid var(--primary-color);
 }

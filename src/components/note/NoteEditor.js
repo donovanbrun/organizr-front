@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getNotes, saveNote, deleteNote } from "../../services/NoteService";
 import { v4 as uuidv4 } from 'uuid';
+import { getUserId } from '../../services/LoginService';
 
 export default function NoteEditor() {
 
@@ -12,7 +13,7 @@ export default function NoteEditor() {
         id: uuidv4(),
         name: "",
         content: "",
-        userId: "Donovan"
+        userId: getUserId()
     });
     const [editMode, setEditMode] = useState(false);
     const [search, setSearch] = useState("");
@@ -41,6 +42,14 @@ export default function NoteEditor() {
             ...note,
             content: event.target.value
         })
+
+        var textarea = document.querySelector(".TextArea");
+        textarea.addEventListener('input', autoResize, false);
+      
+        function autoResize() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        }
     }
 
     let handleNameChange = (event) => {
@@ -55,12 +64,14 @@ export default function NoteEditor() {
             id: uuidv4(),
             name: "",
             content: "",
-            userId: "Donovan"
+            userId: getUserId()
         })
     }
 
     let handleSaveNote = () => {
-        saveNote(note).then(fetchData);
+        if (note.name.trim().length > 0) {
+            saveNote(note).then(fetchData);
+        }
     }
 
     let handleDeleteNote = () => {
@@ -69,7 +80,7 @@ export default function NoteEditor() {
     }
 
     const listNotes = notes.map(n => {
-        if (search === "" || n.name.toLowerCase().includes(search.toString().toLowerCase())) {
+        if (search === "" || n.name.toLowerCase().includes(search.toString().trim().toLowerCase())) {
             if (n?.id === note?.id) {
                 return (<p className="NoteInListSelected" onClick={() => setNote(n)}>{n.name}</p>)
             } 
@@ -83,22 +94,20 @@ export default function NoteEditor() {
             <h1 className="title">Notebook</h1>
 
             <div className="NoteArea">
-                <div className="EditorHeader">
-                    <div className="ButtonsNote">
-                        <button onClick={newNote} className="Button">New note</button>
-                        <button onClick={handleSaveNote} className="Button">Save note</button>
-                        <button onClick={handleDeleteNote} className="Button">Delete note</button>
-                        <button onClick={() => setEditMode(!editMode)} className="Button">Preview/Edit mode</button>
-                    </div>
 
-                    <input placeholder="Name" value={note?.name} onChange={handleNameChange} className="Input"/>
+                <div className="ListNotes">
+                    <h1 className="subtitle">Notes</h1>
+                    <input placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} className="Input"/>
+                    {listNotes}
                 </div>
 
                 <div className="EditorArea">
-                    <div className="ListNotes">
-                        <h1 className="subtitle">Notes</h1>
-                        <input placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} className="Input"/>
-                        {listNotes}
+                    <div className="EditorHeader">
+                        <button onClick={newNote} className="Button">New note</button>
+                        <input placeholder="Name" value={note?.name} onChange={handleNameChange} className="Input"/>
+                        <button onClick={handleSaveNote} className="Button">Save note</button>
+                        <button onClick={handleDeleteNote} className="Button">Delete note</button>
+                        <button onClick={() => setEditMode(!editMode)} className="Button">{editMode ? "Preview mode" : "Edit mode" }</button>
                     </div>
                 
                     {
@@ -111,7 +120,7 @@ export default function NoteEditor() {
                             <ReactMarkdown children={note?.content} remarkPlugins={[remarkGfm]}></ReactMarkdown>
                         </div>
                     }
-                </div>
+                    </div>
             </div>
         </div>
     )

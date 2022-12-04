@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import './TaskManager.css';
 import ReactModal from 'react-modal';
-import { getTasks, addTask, updateTask, deleteTask } from '../../services/TaskService';
+import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../../services/TaskService';
+import { getUserId } from '../../services/LoginService';
 
 export default function TaskManager() {
 
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState({
-        userId: "Donovan",
+        userId: getUserId(),
         name: '',
         deadline: '',
-        status: ''
+        status: '',
+        tags: []
     });
     const [selectedTask, setSelectedTask] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -45,10 +47,11 @@ export default function TaskManager() {
             addTask(newTask).then(fetchData);
             
             setNewTask({
-                userId: "Donovan",
+                userId: getUserId(),
                 name: '',
                 deadline: '',
-                status: ''
+                status: '',
+                tags: []
             });
         }
     }
@@ -113,7 +116,7 @@ export default function TaskManager() {
         else if (task.status === "Normal") {
             normal.push(taskDisplay(task))
         }
-        else if (task.status === "Terminée") {
+        else {
             terminee.push(taskDisplay(task))
         }
     })
@@ -157,6 +160,8 @@ export default function TaskManager() {
                 
             </div>
             
+            <button className='Button' onClick={exportTask}>Export</button>
+
             <ReactModal isOpen={showModal} className="Modal">
                 <TaskModal selectedTask={selectedTask} closeModal={handleCloseModal}/>
                 <button className='Button' onClick={handleCloseModal}>Close</button>

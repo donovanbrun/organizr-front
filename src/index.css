@@ -1,10 +1,24 @@
 html,body, #root {
     margin: 0px;
     padding: 0px;
-    background-color: lightgrey;
+    background-color: var(--background);
+    /*
     --primary-color: rgb(30,129,176);
     --accent-color: rgb(19, 66, 88);
     --color: rgb(255, 255, 255);
+    */
+}
+
+.title {
+    text-align: center;
+    color: var(--color);
+    padding: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--color);
+    padding: 5px;
 }
 
 .Button {
@@ -12,7 +26,7 @@ html,body, #root {
     width: fit-content;
     background-color: var(--primary-color);
     color: var(--color);
-    border: none;
+    border: 1px solid var(--accent-color);
     border-radius: 10px;
     padding: 10px;
 }
@@ -22,10 +36,15 @@ html,body, #root {
 }
 
 .Input {
-    border: var(--primary-color) 1px solid;
-    color: var(--primary-color);
+    border: var(--accent2-color) 1px solid;
+    color: var(--color);
+    background-color: var(--primary-color);
     padding: 10px;
     border-radius: 10px;
+}
+
+.Input::placeholder {
+    color: var(--color);
 }
 
 .TextColor {

@@ -1,49 +1,24 @@
-import React from 'react';
-import axios from "axios";
+import './Login.css';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login as loginApi } from '../../services/LoginService';
 
-class Login extends React.Component {
+export default function Login() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            "username": null,
-            "password": null
-        }
+    const [username, setUsername] = useState(null);
+    const [password, setPassword] = useState(null);
+    const navigate = useNavigate();
+
+    let login = () => {
+        loginApi(username, password).then(navigate("/"))
     }
 
-    onUsernameChange = (event) => {
-        this.setState({
-            "username": event.target.value
-        })
-    }
-
-    onPasswordChange = (event) => {
-        this.setState({
-            "password": event.target.value
-        })
-    }
-
-    login = () => {
-        const loginFormData = new FormData();
-        loginFormData.append("username", this.state.username);
-        loginFormData.append("password", this.state.password);
-
-        axios.post("http://localhost:8080/login", loginFormData, { "Content-Type": "multipart/form-data" });
-    }
-
-    render() {
-
-        const username = this.state.username;
-        const password = this.state.password;
-
-        return (
-            <div>
-                <input type="text" value={username} onChange={this.onUsernameChange}></input>
-                <input type="password" value={password} onChange={this.onPasswordChange}></input>
-                <button onClick={this.login}>login</button>
-            </div>
-        )
-    }
+    return (
+        <div className='Login'>
+            <h1 className="title">Login</h1>
+            <input className='Input' type="text" placeholder='Username' value={username} onChange={e => setUsername(e.target.value)}></input>
+            <input className='Input' type="password" placeholder='Password' value={password} onChange={e => setPassword(e.target.value)}></input>
+            <button className='Button' onClick={login}>Login</button>
+        </div>
+    )
 }
-
-export default Login;

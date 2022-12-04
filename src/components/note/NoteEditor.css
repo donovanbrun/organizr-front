@@ -7,28 +7,23 @@
     border-radius: 4px;
     padding: 4px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
     height: 100%;
 }
 
 .EditorHeader {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 10px;
 }
 
 .ListNotes {
-    background-color: white;
-    border-radius: 20px;
-    width: fit-content;
+    background-color: var(--primary-color);
+    width: 20%;
     height: fit-content;
-    max-width: 30%;
-    padding: 20px;
-    margin: 10px;
+    padding: 10px;
+    margin: 0px 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,58 +32,57 @@
 
 .NoteInList {
     cursor: pointer;
-    color: var(--primary-color);
+    color: var(--color);
     padding: 5px;
     border-radius: 5px;
 }
 
 .NoteInList:hover {
-    color: var(--color);
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
 }
 
 .NoteInListSelected {
     cursor: pointer;
     color: var(--color);
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     padding: 5px;
     border-radius: 5px;
 }
 
 .EditorArea {
     display: flex;
+    flex-direction: column;
     width: 100%;
 }
 
 #Editor,
 #Preview {
-    background-color: white;
-    border-radius: 20px;
-    margin: 10px;
+    background-color: var(--primary-color);
+    color: var(--color);
+    margin: 10px 10px 0px 10px;
     padding: 10px;
-    width: 70%;
-    flex-grow: 1;
+    height: 100%;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    line-height: 1.7em;
 }
 
 .TextArea {
+    border: none;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     resize: none;
+    background-color: var(--primary-color);
+    color: var(--color);
+    overflow-y: hidden;
 }
 
-.ButtonsNote {
-    display: flex;
-    gap: 10px;
+.TextArea:focus {
+    outline: none;
 }
 
 @media (max-width: 768px) {
-    .EditorArea {
+    .NoteArea {
         flex-direction: column;
-    }
-
-    #Editor,
-    #Preview {
-        width: 100%;
     }
 
     .ListNotes {
