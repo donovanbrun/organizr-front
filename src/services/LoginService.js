@@ -1,5 +1,5 @@
 import axios from "axios";
-import Toast from "../components/Toast";
+import Toast from "../components/utils/Toast";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
@@ -8,7 +8,9 @@ export const getUserId = () => {
 }
 
 export const getUsername = () => {
-    return axios.get(apiURL+"/api/user/username");
+    return axios.get(apiURL+"/api/user/username").catch(() => {
+        localStorage.removeItem("userId");
+    })
 }
 
 export const login = (username, password) => {

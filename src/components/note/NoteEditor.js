@@ -42,14 +42,6 @@ export default function NoteEditor() {
             ...note,
             content: event.target.value
         })
-
-        var textarea = document.querySelector(".TextArea");
-        textarea.addEventListener('input', autoResize, false);
-      
-        function autoResize() {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        }
     }
 
     let handleNameChange = (event) => {
@@ -113,7 +105,7 @@ export default function NoteEditor() {
                     {
                         editMode ?
                         <div id="Editor">
-                            <textarea placeholder="Write here..." value={note?.content} onChange={handleChange} className="TextArea"></textarea>
+                            <textarea placeholder="Write here..." rows={note?.content?.split(/\r\n|\r|\n/)?.length} value={note?.content} onChange={handleChange} className="TextArea"></textarea>
                         </div>
                         :
                         <div id="Preview">

@@ -49,8 +49,10 @@ export default function Nav() {
         <div className='Nav'>
             <a href='/' className='NavTitle'>Organizr</a>
             <div className='NavLinks'>
+                <Link to="/" className='NavLink'>HOME</Link>
                 <Link to="/todo" className='NavLink'>TASK</Link>
                 <Link to="/notebook" className='NavLink'>NOTE</Link>
+                <Link to="/object" className='NavLink'>MY OBJECTS</Link>
                 { 
                     username !== null 
                     ? <p className='TextColor' onClick={handleLogout}>{username}</p>

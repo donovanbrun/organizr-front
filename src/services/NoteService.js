@@ -1,5 +1,5 @@
 import axios from "axios";
-import Toast from "../components/Toast";
+import Toast from "../components/utils/Toast";
 
 const apiURL = process.env.REACT_APP_API_URL;
 

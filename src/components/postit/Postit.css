@@ -1,0 +1,48 @@
+.PostitGrid {
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+
+.Postit {
+    background-color: var(--accent2-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    width: 200px;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+
+.Postit > * {
+    color: var(--color);
+    text-align: center;
+    font-size: 1.5em;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+.Postit > button {
+    height: fit-content;
+    padding: 2px;
+}
+
+.Postit > button:hover {
+    color: red;
+}
+
+.CreatePostit > * {
+    height: fit-content;
+    width: fit-content;
+    font-size: 8em;
+}
