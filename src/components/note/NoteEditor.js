@@ -105,7 +105,7 @@ export default function NoteEditor() {
                     {
                         editMode ?
                         <div id="Editor">
-                            <textarea placeholder="Write here..." rows={note?.content?.split(/\r\n|\r|\n/)?.length} value={note?.content} onChange={handleChange} className="TextArea"></textarea>
+                            <textarea placeholder="Write here..." rows={note?.content?.split(/\r\n|\r|\n/)?.length} value={note?.content} onChange={handleChange} className="TextArea" spellCheck="false"/>
                         </div>
                         :
                         <div id="Preview">

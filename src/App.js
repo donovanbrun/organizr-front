@@ -1,4 +1,5 @@
 import './App.css';
+import React from 'react';
 import Nav from './components/nav/Nav';
 import {BrowserRouter,Routes, Route} from "react-router-dom";
 import TaskManager from './components/task/TaskManager';
@@ -7,6 +8,7 @@ import Object from './components/object/Object';
 import Login from './components/login/Login';
 import {Toaster} from 'react-hot-toast';
 import Postit from './components/postit/Postit';
+import EditTask from './components/task/EditTask';
 
 function App() {
 
@@ -22,6 +24,7 @@ function App() {
                         <Route path="/" element={<Postit />} />
 						<Route path="login" element={<Login />} />
 						<Route path="todo" element={<TaskManager />} />
+                        <Route path="task/:id" element={<EditTask />} />
 						<Route path="object" element={<Object />} />
 						<Route path="notebook" element={<NoteEditor />} />
 					</Routes>

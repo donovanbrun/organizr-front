@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './TaskManager.css';
+import { Link } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../../services/TaskService';
 import { getUserId } from '../../services/LoginService';
+import { getTags } from '../../services/TagService';
+import { Autocomplete, TextField } from '@mui/material';
 
 export default function TaskManager() {
 
     const [tasks, setTasks] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
     const [newTask, setNewTask] = useState({
         userId: getUserId(),
         name: '',
@@ -19,7 +24,7 @@ export default function TaskManager() {
     const [displayFinishTasks, setDisplayFinishTasks] = useState(false);
 
     let fetchData = ()  => {
-        getTasks().then(tasksData => {
+        getTasks(selectedTags).then(tasksData => {
             let tasks = tasksData.data;
 
             tasks.sort((a, b) => {
@@ -34,6 +39,10 @@ export default function TaskManager() {
 
             setTasks(tasks);
         });
+
+        getTags().then((res) => {
+            setTags(res?.data)
+        });
     }
 
     useEffect(() => {
@@ -43,7 +52,8 @@ export default function TaskManager() {
     let handleAddTask = () => {
 
         if (newTask.name !== undefined && newTask.name !== "") {
-        
+
+            if (newTask.status === "") newTask.status = "Normal"
             addTask(newTask).then(fetchData);
             
             setNewTask({
@@ -92,6 +102,12 @@ export default function TaskManager() {
         setDisplayFinishTasks(!displayFinishTasks);
     }
 
+    let handleTagFilter = (event, value) => {
+        console.log(value)
+        setSelectedTags(value)
+        fetchData();
+    }
+
     const tresUrgent = [];
     const urgent = [];
     const normal = [];
@@ -125,6 +141,17 @@ export default function TaskManager() {
         <div className='TaskManager'>
             <h1 className="title">Task Manager</h1>
 
+            <Autocomplete
+                className='TaskFilter'
+                multiple
+                value={selectedTags}
+                onChange={handleTagFilter}
+                options={tags}
+                renderInput={(params) => (
+                    <TextField {...params} label="Filters" />
+                )}
+            />
+
             <div className="Area1">
                 <div className="TaskArea">
                     <h2 className="subtitle">Très urgent</h2>
@@ -145,7 +172,12 @@ export default function TaskManager() {
             <div className='AddTask'>
                 <input type="text" className='Input' placeholder='Name' value={newTask.name} id="newTaskName" onChange={newTaskNameChanged}/>
                 <input type="date" className='Input' placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={newTaskDeadlineChanged}/>
-                <input type="text" className='Input' placeholder='Status' value={newTask.status} id="newTaskStatus" onChange={newTaskStatusChanged}/>
+                <select className='Input' name="status" value={newTask.status} onChange={newTaskStatusChanged}>
+                    <option value="Normal" selected>Normal</option>
+                    <option value="Urgent">Urgent</option>
+                    <option value="Très urgent">Très urgent</option>
+                    <option value="Terminée">Terminée</option>
+                </select>
                 <button className='Button' onClick={handleAddTask}>Add</button>
             </div>
 
@@ -173,6 +205,17 @@ export default function TaskManager() {
 function TaskModal({selectedTask, closeModal}) {
 
     const [task, setTask] = useState(selectedTask);
+    const [tags, setTags] = useState([]);
+
+    let fetchTags = ()  => {
+        getTags().then((res) => {
+            setTags(res?.data)
+        })
+    }
+
+    useEffect(() => {
+        fetchTags()
+    }, [])
 
     let handleNameChanged = (event) => {
         setTask({
@@ -195,6 +238,11 @@ function TaskModal({selectedTask, closeModal}) {
         })
     };
 
+    let formatDate = (datestring) => {
+        let date = new Date(datestring)
+        return date.getFullYear() + "-" + (date.getUTCMonth() >= 10 ? date.getUTCMonth()+1 : "0"+(date.getUTCMonth()+1)) + "-" + (date.getDate() >= 10 ? date.getDate() : "0"+date.getDate())
+    }
+
     let handleStatusChanged = (event) => {
         setTask({
             ...task,
@@ -212,6 +260,13 @@ function TaskModal({selectedTask, closeModal}) {
         deleteTask(task?.id).then(closeModal);
     }
 
+    let handleTagChanged = (event, value) => {
+        setTask({
+            ...task,
+            tags: value
+        })
+    }
+
     return (
         <div className='TaskModal'>
             <h1 className='title'>Task Editing</h1>
@@ -219,13 +274,34 @@ function TaskModal({selectedTask, closeModal}) {
                 <h3>Name</h3>
                 <input type='text' className='Input' value={task.name} onChange={handleNameChanged}/>
                 <h3>Deadline</h3>
-                <input type='date' className='Input' value={task.deadline} onChange={handleDeadlineChanged}/>
-                <h3>Description</h3>
-                <textarea className='Input' value={task.description} onChange={handleDescriptionChanged} style={{resize: 'none'}}/>
+                <input type='date' className='Input' value={formatDate(task.deadline)} onChange={handleDeadlineChanged}/>
+                {/*<h3>Description</h3>
+                <textarea className='Input' value={task.description} onChange={handleDescriptionChanged} style={{resize: 'none'}}/>*/}
                 <h3>Status</h3>
-                <input type='text' className='Input' value={task.status} onChange={handleStatusChanged}/>
+                <select className='Input' name="status" value={task.status} onChange={handleStatusChanged}>
+                    <option value="Normal">Normal</option>
+                    <option value="Urgent">Urgent</option>
+                    <option value="Très urgent">Très urgent</option>
+                    <option value="Terminée">Terminée</option>
+                </select>
+
+                <Autocomplete
+                    multiple
+                    freeSolo
+                    value={task.tags}
+                    onChange={handleTagChanged}
+                    options={tags}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Tags" />
+                    )}
+                />
+            </div>
+            <div className='TaskModalDate'>
+                <p>Creation : {(new Date(task.creationDate)).toLocaleString()}</p>
+                <p>Modification : {(new Date(task.modificationDate)).toLocaleString()}</p>
             </div>
             <div className='TaskModalButtons'>
+                <Link to={"/task/"+task.id} className='Button'>Open</Link>
                 <button className='Button' onClick={handleUpdateTask}>Save</button>
                 <button className='Button' onClick={handleDeleteTask}>Delete</button>
             </div>

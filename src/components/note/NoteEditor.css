@@ -60,13 +60,14 @@
     background-color: var(--primary-color);
     color: var(--color);
     margin: 10px 10px 0px 10px;
-    padding: 10px;
+    padding: 30px;
     height: 100%;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    /*font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;*/
     line-height: 1.7em;
 }
 
 .TextArea {
+    font-size: 1.2em;
     border: none;
     width: 100%;
     min-height: 100%;

@@ -15,7 +15,16 @@ export default function Postit() {
     let fetchData = ()  => {
         getPostit().then(postitsData => {
             let data = postitsData.data;
-            setPostits(data);
+            let sorted = data.sort((a, b) => {
+                if (a.creationDate > b.creationDate) {
+                    return 1;
+                }
+                if (a.creationDate < b.creationDate) {
+                    return -1;
+                }
+                return 0;
+            });
+            setPostits(sorted);
         });
     }
 
@@ -27,12 +36,15 @@ export default function Postit() {
         }).then(fetchData)
     }
 
-    let handleChange = (id, event) => {
-        updatePostit({
-            id: id,
-            content: event.target.value,
-            userId: getUserId()
-        }).then(fetchData)
+    let handleChange = (postit, event) => {
+        if (event.target.value?.length < 255) {
+            updatePostit({
+                id: postit.id,
+                content: event.target.value,
+                userId: postit.userId,
+                creationDate: postit.creationDate
+            }).then(fetchData)
+        }
     }
 
     let handleDelete = (id) => {
@@ -41,10 +53,10 @@ export default function Postit() {
 
     let postitsDisplay = []
 
-    postits.forEach(postit => {
+    postits.forEach((postit) => {
         postitsDisplay.push(
             <div className='Postit'>
-                <textarea onChange={(event) => handleChange(postit.id, event)} value={postit.content}/>
+                <textarea onChange={(event) => handleChange(postit, event)} value={postit.content} spellCheck="false"/>
                 <button onClick={() => handleDelete(postit.id)}>X</button>
             </div>
         )

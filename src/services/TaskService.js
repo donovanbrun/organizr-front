@@ -7,9 +7,20 @@ export const getStatus = () => {
     return axios.get(apiURL+"/api/task/status");
 }
 
-export const getTasks = () => {
+export const getTasks = (tags) => {
+    if (tags !== undefined && tags.length > 0) {
+        return axios.post(apiURL+"/api/task/tag", tags).catch(() => {
+            Toast.error("Error while fetching tasks")
+        })
+    }
     return axios.get(apiURL+"/api/task/").catch(() => {
         Toast.error("Error while fetching tasks")
+    })
+}
+
+export const getTask = (id) => {
+    return axios.get(apiURL+"/api/task/get/"+id).catch(() => {
+        Toast.error("Error while fetching task")
     })
 }
 
@@ -48,5 +59,15 @@ export const deleteTask = (id) => {
 }
 
 export const exportTask = () => {
-    return axios.get(apiURL+"/api/task/export");
+    return axios.get(apiURL+"/api/task/export", {
+        "content-type": "text/csv",
+        "responseType": "blob",
+    }).then (response => {
+        const type = response.headers['content-type']
+        const blob = new Blob([response.data], { type: type, encoding: 'UTF-8' })
+        const link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = 'export-' + (new Date()).toISOString() + '.csv'
+        link.click()
+    })
 }

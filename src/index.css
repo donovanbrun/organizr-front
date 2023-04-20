@@ -11,18 +11,19 @@ html,body, #root {
 
 .title {
     text-align: center;
-    color: var(--color);
+    color: var(--title);
     padding: 10px;
 }
 
 .subtitle {
     text-align: center;
-    color: var(--color);
+    color: var(--subtitle);
     padding: 5px;
 }
 
 .Button {
     cursor: pointer;
+    text-decoration: none;
     width: fit-content;
     background-color: var(--primary-color);
     color: var(--color);

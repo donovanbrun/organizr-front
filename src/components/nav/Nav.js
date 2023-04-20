@@ -18,14 +18,18 @@ export default function Nav() {
         document.documentElement.style.setProperty('--accent2-color', DARKMODE.accent2);
         document.documentElement.style.setProperty('--color', DARKMODE.color);
         document.documentElement.style.setProperty('--background', DARKMODE.background);
+        document.documentElement.style.setProperty('--title', DARKMODE.title);
+        document.documentElement.style.setProperty('--subtitle', DARKMODE.subtitle);
     }
     else {
         document.documentElement.style.setProperty('--primary-color', LIGHTMODE.primary);
         document.documentElement.style.setProperty('--secondary-color', LIGHTMODE.secondary);
         document.documentElement.style.setProperty('--accent-color', LIGHTMODE.accent);
         document.documentElement.style.setProperty('--accent2-color', LIGHTMODE.accent2);
-        document.documentElement.style.setProperty('--color', LIGHTMODE.color);
+        document.documentElement.style.setProperty('--color', DARKMODE.color);
         document.documentElement.style.setProperty('--background', LIGHTMODE.background);
+        document.documentElement.style.setProperty('--title', LIGHTMODE.title);
+        document.documentElement.style.setProperty('--subtitle', LIGHTMODE.subtitle);
     }
 
     if(getUserId()) {
@@ -52,10 +56,10 @@ export default function Nav() {
                 <Link to="/" className='NavLink'>HOME</Link>
                 <Link to="/todo" className='NavLink'>TASK</Link>
                 <Link to="/notebook" className='NavLink'>NOTE</Link>
-                <Link to="/object" className='NavLink'>MY OBJECTS</Link>
+                <p className='TextColor'>{username !== null ? "Connected as " + username : "Not connected"}</p>
                 { 
                     username !== null 
-                    ? <p className='TextColor' onClick={handleLogout}>{username}</p>
+                    ? <Link to="/login" onClick={handleLogout} className='NavLink'>LOGOUT</Link>
                     : <Link to="/login" className='NavLink'>LOGIN</Link>
                 }
                 <button className='DarkmodeButton' onClick={changeMode} >

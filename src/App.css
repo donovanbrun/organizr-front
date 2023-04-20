@@ -7,8 +7,14 @@
     background-color: var(--background);
 }
 
-:root::-webkit-scrollbar, :root::-webkit-scrollbar-track, :root::-webkit-scrollbar-thumb {
-    width: 0px;
+:root::-webkit-scrollbar {
+    background-color: transparent;
+    width: 2px;
+}
+
+:root::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--accent2-color);
 }
 
 .container{

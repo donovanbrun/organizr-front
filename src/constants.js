@@ -3,8 +3,10 @@ export const LIGHTMODE = {
     secondary: 'rgb(30,129,176)',
     accent: 'rgb(19, 66, 88)',
     accent2: 'rgb(19, 66, 88)',
-    color: "white",
-    background: 'lightgrey'
+    color: 'white',
+    background: 'lightgrey',
+    title: 'black',
+    subtitle: 'white'
 };
 
 export const DARKMODE = {
@@ -13,5 +15,7 @@ export const DARKMODE = {
     accent: '#F1C231',
     accent2: '#4AA97E',
     color: 'white',
-    background: '#062224'
+    background: '#062224',
+    title: 'white',
+    subtitle: 'white'
 };
