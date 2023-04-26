@@ -1,8 +1,8 @@
-.Home {
-    width: 100%;
-    height: 100%;
+.EditTask {
     display: flex;
-    gap: 20px;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
 }
