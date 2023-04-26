@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { createPostit, deletePostit, getPostit, updatePostit } from '../../services/PostitService';
-import './Postit.css';
+import { createPostit, deletePostit, getPostit, updatePostit } from '../../../services/PostitService';
+import styles from '../../../styles/Postit.module.css';
 import { v4 as uuidv4 } from 'uuid';
-import { getUserId } from '../../services/LoginService';
+import { getUserId } from '../../../services/LoginService';
 
 export default function Postit() {
 
@@ -55,7 +55,7 @@ export default function Postit() {
 
     postits.forEach((postit) => {
         postitsDisplay.push(
-            <div className='Postit'>
+            <div className={styles.Postit}>
                 <textarea onChange={(event) => handleChange(postit, event)} value={postit.content} spellCheck="false"/>
                 <button onClick={() => handleDelete(postit.id)}>X</button>
             </div>
@@ -63,9 +63,9 @@ export default function Postit() {
     })
 
     return (
-        <div className='PostitGrid'>
+        <div className={styles.PostitGrid}>
             {postitsDisplay}
-            <div className='Postit CreatePostit' onClick={create}>
+            <div className={[styles.Postit, styles.CreatePostit].join(" ")} onClick={create}>
                 <p>+</p>
             </div>
         </div>

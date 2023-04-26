@@ -1,7 +1,7 @@
 import axios from "axios";
-import Toast from "../components/utils/Toast";
+import Toast from "../src/Toast";
 
-const apiURL = process.env.REACT_APP_API_URL;
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getStatus = () => {
     return axios.get(apiURL+"/api/note/status");

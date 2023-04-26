@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import './TaskManager.css';
-import { Link } from 'react-router-dom';
+import Nav from '../src/components/nav/Nav';
+import styles from '../styles/TaskManager.module.css';
+import Link from 'next/link';
 import ReactModal from 'react-modal';
-import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../../services/TaskService';
-import { getUserId } from '../../services/LoginService';
-import { getTags } from '../../services/TagService';
+import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/TaskService';
+import { getUserId } from '../services/LoginService';
+import { getTags } from '../services/TagService';
 import { Autocomplete, TextField } from '@mui/material';
 
 export default function TaskManager() {
@@ -23,7 +24,7 @@ export default function TaskManager() {
     const [showModal, setShowModal] = useState(false);
     const [displayFinishTasks, setDisplayFinishTasks] = useState(false);
 
-    let fetchData = ()  => {
+    let fetchData = () => {
         getTasks(selectedTags).then(tasksData => {
             let tasks = tasksData.data;
 
@@ -55,7 +56,7 @@ export default function TaskManager() {
 
             if (newTask.status === "") newTask.status = "Normal"
             addTask(newTask).then(fetchData);
-            
+
             setNewTask({
                 userId: getUserId(),
                 name: '',
@@ -91,7 +92,7 @@ export default function TaskManager() {
         setShowModal(true);
         setSelectedTask(task);
     }
-    
+
     let handleCloseModal = () => {
         setShowModal(false);
         setSelectedTask(null);
@@ -115,9 +116,9 @@ export default function TaskManager() {
 
     let taskDisplay = (task) => {
         return (
-            <div className='Task' onClick={e => handleOpenModal(task)}>
-                <p className='TaskName'>{task.name}</p>
-                <p className='TaskDate'>{task.deadline !== null ? (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+            <div className={styles.Task} onClick={e => handleOpenModal(task)}>
+                <p className={styles.TaskName}>{task.name}</p>
+                <p className={styles.TaskDate}>{task.deadline !== null ? (new Date(task.deadline)).toLocaleDateString() : ""}</p>
             </div>
         )
     }
@@ -138,76 +139,79 @@ export default function TaskManager() {
     })
 
     return (
-        <div className='TaskManager'>
-            <h1 className="title">Task Manager</h1>
+        <div className="App">
+            <Nav></Nav>
+            <div className={styles.TaskManager}>
+                <h1 className="title">Task Manager</h1>
 
-            <Autocomplete
-                className='TaskFilter'
-                multiple
-                value={selectedTags}
-                onChange={handleTagFilter}
-                options={tags}
-                renderInput={(params) => (
-                    <TextField {...params} label="Filters" />
-                )}
-            />
+                <Autocomplete
+                    className={styles.TaskFilter}
+                    multiple
+                    value={selectedTags}
+                    onChange={handleTagFilter}
+                    options={tags}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Filters" />
+                    )}
+                />
 
-            <div className="Area1">
-                <div className="TaskArea">
-                    <h2 className="subtitle">Très urgent</h2>
-                    {tresUrgent}
+                <div className={styles.Area1}>
+                    <div className={styles.TaskArea}>
+                        <h2 className="subtitle">Très urgent</h2>
+                        {tresUrgent}
+                    </div>
+
+                    <div className={styles.TaskArea}>
+                        <h2 className="subtitle">Urgent</h2>
+                        {urgent}
+                    </div>
+
+                    <div className={styles.TaskArea}>
+                        <h2 className="subtitle">Normal</h2>
+                        {normal}
+                    </div>
                 </div>
 
-                <div className="TaskArea">
-                    <h2 className="subtitle">Urgent</h2>
-                    {urgent}
+                <div className={styles.AddTask}>
+                    <input type="text" className="Input" placeholder='Name' value={newTask.name} id="newTaskName" onChange={newTaskNameChanged} />
+                    <input type="date" className="Input" placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={newTaskDeadlineChanged} />
+                    <select className="Input" name="status" value={newTask.status} onChange={newTaskStatusChanged}>
+                        <option value="Normal" selected>Normal</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Très urgent">Très urgent</option>
+                        <option value="Terminée">Terminée</option>
+                    </select>
+                    <button className="Button" onClick={handleAddTask}>Add</button>
                 </div>
 
-                <div className="TaskArea">
-                    <h2 className="subtitle">Normal</h2>
-                    {normal}
+                <div className={styles.Area2}>
+                    <h2 className="subtitle">Terminée</h2>
+                    <button className="Button" onClick={handleDisplayFinishTasks}> {displayFinishTasks ? "Unshow" : "Show"} </button>
+                    {
+                        displayFinishTasks
+                            ? <div className={styles.TaskArea}> {terminee} </div>
+                            : null
+                    }
+
                 </div>
-            </div>
 
-            <div className='AddTask'>
-                <input type="text" className='Input' placeholder='Name' value={newTask.name} id="newTaskName" onChange={newTaskNameChanged}/>
-                <input type="date" className='Input' placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={newTaskDeadlineChanged}/>
-                <select className='Input' name="status" value={newTask.status} onChange={newTaskStatusChanged}>
-                    <option value="Normal" selected>Normal</option>
-                    <option value="Urgent">Urgent</option>
-                    <option value="Très urgent">Très urgent</option>
-                    <option value="Terminée">Terminée</option>
-                </select>
-                <button className='Button' onClick={handleAddTask}>Add</button>
-            </div>
+                <button className="Button" onClick={exportTask}>Export</button>
 
-            <div className='Area2'>
-                <h2 className="subtitle">Terminée</h2>
-                <button className='Button' onClick={handleDisplayFinishTasks}> {displayFinishTasks ? "Unshow" : "Show"} </button>
-                { 
-                    displayFinishTasks 
-                    ? <div className="TaskArea2"> {terminee} </div>
-                    : null
-                }
-                
+                <ReactModal isOpen={showModal} className={styles.Modal}>
+                    <TaskModal selectedTask={selectedTask} closeModal={handleCloseModal} />
+                    <button className="Button" onClick={handleCloseModal}>Close</button>
+                </ReactModal>
             </div>
-            
-            <button className='Button' onClick={exportTask}>Export</button>
-
-            <ReactModal isOpen={showModal} className="Modal">
-                <TaskModal selectedTask={selectedTask} closeModal={handleCloseModal}/>
-                <button className='Button' onClick={handleCloseModal}>Close</button>
-            </ReactModal>
         </div>
     )
 }
 
-function TaskModal({selectedTask, closeModal}) {
+function TaskModal({ selectedTask, closeModal }) {
 
     const [task, setTask] = useState(selectedTask);
     const [tags, setTags] = useState([]);
 
-    let fetchTags = ()  => {
+    let fetchTags = () => {
         getTags().then((res) => {
             setTags(res?.data)
         })
@@ -240,7 +244,7 @@ function TaskModal({selectedTask, closeModal}) {
 
     let formatDate = (datestring) => {
         let date = new Date(datestring)
-        return date.getFullYear() + "-" + (date.getUTCMonth() >= 10 ? date.getUTCMonth()+1 : "0"+(date.getUTCMonth()+1)) + "-" + (date.getDate() >= 10 ? date.getDate() : "0"+date.getDate())
+        return date.getFullYear() + "-" + (date.getUTCMonth() >= 10 ? date.getUTCMonth() + 1 : "0" + (date.getUTCMonth() + 1)) + "-" + (date.getDate() >= 10 ? date.getDate() : "0" + date.getDate())
     }
 
     let handleStatusChanged = (event) => {
@@ -268,13 +272,13 @@ function TaskModal({selectedTask, closeModal}) {
     }
 
     return (
-        <div className='TaskModal'>
+        <div className={styles.TaskModal}>
             <h1 className='title'>Task Editing</h1>
-            <div className='TaskFormModal'>
+            <div className={styles.TaskFormModal}>
                 <h3>Name</h3>
-                <input type='text' className='Input' value={task.name} onChange={handleNameChanged}/>
+                <input type='text' className='Input' value={task.name} onChange={handleNameChanged} />
                 <h3>Deadline</h3>
-                <input type='date' className='Input' value={formatDate(task.deadline)} onChange={handleDeadlineChanged}/>
+                <input type='date' className='Input' value={formatDate(task.deadline)} onChange={handleDeadlineChanged} />
                 {/*<h3>Description</h3>
                 <textarea className='Input' value={task.description} onChange={handleDescriptionChanged} style={{resize: 'none'}}/>*/}
                 <h3>Status</h3>
@@ -296,12 +300,12 @@ function TaskModal({selectedTask, closeModal}) {
                     )}
                 />
             </div>
-            <div className='TaskModalDate'>
+            <div className={styles.TaskModalDate}>
                 <p>Creation : {(new Date(task.creationDate)).toLocaleString()}</p>
                 <p>Modification : {(new Date(task.modificationDate)).toLocaleString()}</p>
             </div>
-            <div className='TaskModalButtons'>
-                <Link to={"/task/"+task.id} className='Button'>Open</Link>
+            <div className={styles.TaskModalButtons}>
+                <Link href={"/task/" + task.id} className='Button'>Open</Link>
                 <button className='Button' onClick={handleUpdateTask}>Save</button>
                 <button className='Button' onClick={handleDeleteTask}>Delete</button>
             </div>
