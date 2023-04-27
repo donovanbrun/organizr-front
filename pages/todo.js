@@ -279,8 +279,6 @@ function TaskModal({ selectedTask, closeModal }) {
                 <input type='text' className='Input' value={task.name} onChange={handleNameChanged} />
                 <h3>Deadline</h3>
                 <input type='date' className='Input' value={formatDate(task.deadline)} onChange={handleDeadlineChanged} />
-                {/*<h3>Description</h3>
-                <textarea className='Input' value={task.description} onChange={handleDescriptionChanged} style={{resize: 'none'}}/>*/}
                 <h3>Status</h3>
                 <select className='Input' name="status" value={task.status} onChange={handleStatusChanged}>
                     <option value="Normal">Normal</option>

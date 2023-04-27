@@ -5,6 +5,7 @@ import styles from '../../../styles/Nav.module.css';
 import { getUserId, getUsername, logout } from '../../../services/LoginService';
 import { DARKMODE, LIGHTMODE } from '../../constants';
 import { MdOutlineDarkMode, MdOutlineWbSunny } from 'react-icons/md';
+import { Toaster } from 'react-hot-toast';
 
 export default function Nav() {
 
@@ -58,6 +59,7 @@ export default function Nav() {
 
     return (
         <div className={styles.Nav}>
+            <Toaster />
             <a href='/' className={styles.NavTitle}>Organizr</a>
             <div className={styles.NavLinks}>
                 <Link href="/" className={styles.NavLink}>HOME</Link>
