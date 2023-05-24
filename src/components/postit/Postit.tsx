@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { createPostit, deletePostit, getPostit, updatePostit } from '../../../services/PostitService';
-import styles from '../../../styles/Postit.module.css';
+
+import { createPostit, deletePostit, getPostit, updatePostit } from '../../services/offline/PostitOfflineService';
+import styles from '../../styles/Postit.module.css';
 import { v4 as uuidv4 } from 'uuid';
-import { getUserId } from '../../../services/LoginService';
+import { getUserId } from '../../services/LoginService';
 
 export default function Postit() {
 

@@ -1,14 +1,14 @@
 import styles from '../styles/Login.module.css';
 import { useState } from 'react';
 import { login as loginApi } from '../services/LoginService';
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 
 export default function Login() {
 
     const [username, setUsername] = useState(null);
     const [password, setPassword] = useState(null);
 
-    const router = useRouter();
+    const router: NextRouter = useRouter();
 
     let login = () => {
         loginApi(username, password).then(router.push('/'))

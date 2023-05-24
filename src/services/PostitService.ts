@@ -1,5 +1,5 @@
 import axios from "axios";
-import Toast from "../src/Toast";
+import Toast from "../components/Toast";
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
 

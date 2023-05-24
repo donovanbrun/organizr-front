@@ -1,11 +1,7 @@
 import axios from "axios";
-import Toast from "../src/Toast";
+import Toast from "../components/Toast";
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
-
-export const getStatus = () => {
-    return axios.get(apiURL+"/api/task/status");
-}
 
 export const getTasks = (tags) => {
     if (tags !== undefined && tags.length > 0) {

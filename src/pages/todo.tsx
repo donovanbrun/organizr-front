@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import Nav from '../src/components/nav/Nav';
+import Nav from '../components/nav/Nav';
 import styles from '../styles/TaskManager.module.css';
 import Link from 'next/link';
 import ReactModal from 'react-modal';
-import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/TaskService';
+//import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/TaskService';
+import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/offline/TaskOfflineService';
 import { getUserId } from '../services/LoginService';
 import { getTags } from '../services/TagService';
 import { Autocomplete, TextField } from '@mui/material';
+import { AxiosResponse } from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function TaskManager() {
 
@@ -14,10 +17,14 @@ export default function TaskManager() {
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [newTask, setNewTask] = useState({
+        id: uuidv4(),
         userId: getUserId(),
         name: '',
+        description: '',
         deadline: '',
         status: '',
+        creationDate: '',
+        modificationDate: '',
         tags: []
     });
     const [selectedTask, setSelectedTask] = useState(null);
@@ -25,7 +32,7 @@ export default function TaskManager() {
     const [displayFinishTasks, setDisplayFinishTasks] = useState(false);
 
     let fetchData = () => {
-        getTasks(selectedTags).then(tasksData => {
+        getTasks(selectedTags).then((tasksData: AxiosResponse)  => {
             let tasks = tasksData.data;
 
             tasks.sort((a, b) => {
@@ -58,10 +65,14 @@ export default function TaskManager() {
             addTask(newTask).then(fetchData);
 
             setNewTask({
+                id: uuidv4(),
                 userId: getUserId(),
                 name: '',
+                description: '',
                 deadline: '',
                 status: '',
+                creationDate: '',
+                modificationDate: '',
                 tags: []
             });
         }

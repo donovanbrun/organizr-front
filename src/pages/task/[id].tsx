@@ -2,16 +2,21 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import styles from '../../styles/EditTask.module.css';
-import { getTask, updateTask, deleteTask } from '../../services/TaskService';
-import Nav from '../../src/components/nav/Nav';
+//import { getTask, updateTask, deleteTask } from '../../services/TaskService';
+import { getTask, updateTask, deleteTask } from '../../services/offline/TaskOfflineService';
+import Nav from '../../components/nav/Nav';
 
 export default function EditTask() {
 
     const [task, setTask] = useState({
+        id: '',
         userId: '',
         name: '',
+        description: '',
         deadline: '',
         status: '',
+        creationDate: '',
+        modificationDate: '',
         tags: []
     });
 

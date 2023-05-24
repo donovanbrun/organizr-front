@@ -1,5 +1,5 @@
-import Postit from '../src/components/postit/Postit';
-import Nav from '../src/components/nav/Nav';
+import Postit from '../components/postit/Postit';
+import Nav from '../components/nav/Nav';
 
 export default function MyApp() {
     return (

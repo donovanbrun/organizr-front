@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Nav from '../src/components/nav/Nav';
+import Nav from '../components/nav/Nav';
 import styles from '../styles/NoteEditor.module.css';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getNotes, saveNote, deleteNote } from "../services/NoteService";
+// import { getNotes, saveNote, deleteNote } from "../services/NoteService";
+import { getNotes, saveNote, deleteNote } from "../services/offline/NoteOfflineService";
 import { v4 as uuidv4 } from 'uuid';
 import { getUserId } from '../services/LoginService';
+import { AxiosResponse } from "axios";
 
 export default function NoteEditor() {
 
@@ -24,7 +26,7 @@ export default function NoteEditor() {
     }, [])
 
     let fetchData = () => {
-        getNotes().then(notes => {
+        getNotes().then((notes: AxiosResponse) => {
             let sortedNotes = notes.data.sort((a, b) => {
                 if (a.name > b.name) {
                     return 1;
@@ -63,6 +65,7 @@ export default function NoteEditor() {
 
     let handleSaveNote = () => {
         if (note.name.trim().length > 0) {
+            console.log(note)
             saveNote(note).then(fetchData);
         }
     }

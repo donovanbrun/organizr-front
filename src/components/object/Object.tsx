@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import { getTasks } from '../../services/TaskService';
 import { getNotes } from "../../services/NoteService";
+import { AxiosResponse } from 'axios';
 
 export default function Object() {
 
@@ -12,7 +13,7 @@ export default function Object() {
 
         setObjects([])
 
-        getTasks().then(tasksData => {
+        getTasks().then((tasksData: AxiosResponse) => {
             let taskslist = tasksData.data;
             setTasks(taskslist);
             

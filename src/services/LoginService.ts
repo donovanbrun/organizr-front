@@ -1,11 +1,17 @@
 import axios from "axios";
-import Toast from "../src/Toast";
+import Toast from "../components/Toast";
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getUserId = () => {
-    if (typeof window !== "undefined") return localStorage.getItem("userId")
-    return null
+    if (typeof window !== "undefined") {
+        if (process.env.NEXT_PUBLIC_OFFLINE_MODE === "true") {
+            localStorage.setItem("userId", "offline");
+            return "offline";
+        }
+        return localStorage.getItem("userId");
+    }
+    return null;
 }
 
 export const getUsername = () => {
