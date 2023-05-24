@@ -18,7 +18,7 @@ export default function NoteEditor() {
         content: "",
         userId: getUserId()
     });
-    const [editMode, setEditMode] = useState(false);
+    const [editMode, setEditMode] = useState(true);
     const [search, setSearch] = useState("");
 
     useEffect(() => {
