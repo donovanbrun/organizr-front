@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import Toast from "../components/Toast";
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
@@ -55,15 +55,22 @@ export const deleteTask = (id) => {
 }
 
 export const exportTask = () => {
-    return axios.get(apiURL+"/api/task/export", {
-        "content-type": "text/csv",
-        "responseType": "blob",
-    }).then (response => {
+
+    /*
+    const config: AxiosRequestConfig = {
+        headers: {
+            "content-type": "text/csv",
+            "responseType": "blob",
+        }
+    }
+
+    return axios.get(apiURL+"/api/task/export", ).then (response => {
         const type = response.headers['content-type']
-        const blob = new Blob([response.data], { type: type, encoding: 'UTF-8' })
+        const blobOptions: BlobPropertyBag = { type: type, encoding: 'UTF-8' }
+        const blob = new Blob([response.data], blobOptions)
         const link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
         link.download = 'export-' + (new Date()).toISOString() + '.csv'
         link.click()
-    })
+    })*/
 }

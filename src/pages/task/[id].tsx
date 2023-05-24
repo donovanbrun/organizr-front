@@ -29,7 +29,7 @@ export default function EditTask() {
 
     let fetchData = () => {
         getTask(id).then(data => {
-            setTask(data.data)
+            setTask(data["data"])
         })
     }
 

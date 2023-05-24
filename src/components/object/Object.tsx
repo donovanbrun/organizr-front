@@ -13,7 +13,7 @@ export default function Object() {
 
         setObjects([])
 
-        getTasks().then((tasksData: AxiosResponse) => {
+        getTasks([]).then((tasksData: AxiosResponse) => {
             let taskslist = tasksData.data;
             setTasks(taskslist);
             
@@ -28,7 +28,7 @@ export default function Object() {
             })
         });
 
-        getNotes().then(notes => {
+        getNotes().then((notes: AxiosResponse) => {
             let noteslist = notes.data;
             setNotes(noteslist);
             

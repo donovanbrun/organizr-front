@@ -4,6 +4,7 @@ import { createPostit, deletePostit, getPostit, updatePostit } from '../../servi
 import styles from '../../styles/Postit.module.css';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserId } from '../../services/LoginService';
+import { AxiosResponse } from 'axios';
 
 export default function Postit() {
 
@@ -14,7 +15,7 @@ export default function Postit() {
     }, [])
 
     let fetchData = ()  => {
-        getPostit().then(postitsData => {
+        getPostit().then((postitsData: AxiosResponse) => {
             let data = postitsData.data;
             let sorted = data.sort((a, b) => {
                 if (a.creationDate > b.creationDate) {
