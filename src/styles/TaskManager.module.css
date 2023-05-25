@@ -27,6 +27,7 @@
 }
 
 .TaskArea {
+    width: 20em;
     padding: 10px;
     background-color: var(--primary-color);
     border-radius: 10px;
@@ -67,7 +68,9 @@
 }
 
 .TaskName, .TaskDate {
+    overflow-wrap: break-word;
     color: var(--color);
+    text-align: center;
 }
 
 .TaskTable {

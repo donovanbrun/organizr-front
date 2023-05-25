@@ -168,17 +168,17 @@ export default function TaskManager() {
 
                 <div className={styles.Area1}>
                     <div className={styles.TaskArea}>
-                        <h2 className="subtitle">Très urgent</h2>
+                        <h2 className="subtitle">Highest</h2>
                         {tresUrgent}
                     </div>
 
                     <div className={styles.TaskArea}>
-                        <h2 className="subtitle">Urgent</h2>
+                        <h2 className="subtitle">High</h2>
                         {urgent}
                     </div>
 
                     <div className={styles.TaskArea}>
-                        <h2 className="subtitle">Normal</h2>
+                        <h2 className="subtitle">Medium</h2>
                         {normal}
                     </div>
                 </div>
@@ -187,16 +187,16 @@ export default function TaskManager() {
                     <input type="text" className="Input" placeholder='Name' value={newTask.name} id="newTaskName" onChange={newTaskNameChanged} />
                     <input type="date" className="Input" placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={newTaskDeadlineChanged} />
                     <select className="Input" name="status" value={newTask.status} onChange={newTaskStatusChanged}>
-                        <option value="Normal" selected>Normal</option>
-                        <option value="Urgent">Urgent</option>
-                        <option value="Très urgent">Très urgent</option>
-                        <option value="Terminée">Terminée</option>
+                        <option value="Normal" selected>Medium</option>
+                        <option value="Urgent">High</option>
+                        <option value="Très urgent">Highest</option>
+                        <option value="Terminée">Finished</option>
                     </select>
                     <button className="Button" onClick={handleAddTask}>Add</button>
                 </div>
 
                 <div className={styles.Area2}>
-                    <h2 className="subtitle">Terminée</h2>
+                    <h2 className="subtitle">Finished</h2>
                     <button className="Button" onClick={handleDisplayFinishTasks}> {displayFinishTasks ? "Unshow" : "Show"} </button>
                     {
                         displayFinishTasks
@@ -294,7 +294,7 @@ function TaskModal({ selectedTask, closeModal }) {
                 <select className='Input' name="status" value={task.status} onChange={handleStatusChanged}>
                     <option value="Normal">Normal</option>
                     <option value="Urgent">Urgent</option>
-                    <option value="Très urgent">Très urgent</option>
+                    <option value="Très urgent">Highest</option>
                     <option value="Terminée">Terminée</option>
                 </select>
 
