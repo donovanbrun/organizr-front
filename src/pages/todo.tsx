@@ -155,7 +155,7 @@ export default function TaskManager() {
             <div className={styles.TaskManager}>
                 <h1 className="title">Task Manager</h1>
 
-                <Autocomplete
+                {/* <Autocomplete
                     className={styles.TaskFilter}
                     multiple
                     value={selectedTags}
@@ -164,7 +164,7 @@ export default function TaskManager() {
                     renderInput={(params) => (
                         <TextField {...params} label="Filters" />
                     )}
-                />
+                /> */}
 
                 <div className={styles.Area1}>
                     <div className={styles.TaskArea}>
@@ -298,7 +298,7 @@ function TaskModal({ selectedTask, closeModal }) {
                     <option value="Terminée">Terminée</option>
                 </select>
 
-                <Autocomplete
+                {/* <Autocomplete
                     multiple
                     freeSolo
                     value={task.tags}
@@ -307,7 +307,7 @@ function TaskModal({ selectedTask, closeModal }) {
                     renderInput={(params) => (
                         <TextField {...params} label="Tags" />
                     )}
-                />
+                /> */}
             </div>
             <div className={styles.TaskModalDate}>
                 <p>Creation : {(new Date(task.creationDate)).toLocaleString()}</p>
