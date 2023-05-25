@@ -91,10 +91,10 @@ export default function EditTask() {
                     <input type='date' className='Input' value={formatDate(task.deadline)} onChange={handleDeadlineChanged} />
                     <h3 className='TextColor'>Status</h3>
                     <select className='Input' name="status" value={task.status} onChange={handleStatusChanged}>
-                        <option value="Normal">Normal</option>
-                        <option value="Urgent">Urgent</option>
-                        <option value="Très urgent">Très urgent</option>
-                        <option value="Terminée">Terminée</option>
+                        <option value="Normal">Medium</option>
+                        <option value="Urgent">High</option>
+                        <option value="Très urgent">Highest</option>
+                        <option value="Terminée">Finished</option>
                     </select>
                     <h3 className='TextColor'>Description</h3>
                     <textarea className='Input' value={task.description} onChange={handleDescriptionChanged} style={{ resize: 'none' }} rows={task?.description?.split(/\r\n|\r|\n/)?.length} />

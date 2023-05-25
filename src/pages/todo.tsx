@@ -292,10 +292,10 @@ function TaskModal({ selectedTask, closeModal }) {
                 <input type='date' className='Input' value={formatDate(task.deadline)} onChange={handleDeadlineChanged} />
                 <h3>Status</h3>
                 <select className='Input' name="status" value={task.status} onChange={handleStatusChanged}>
-                    <option value="Normal">Normal</option>
-                    <option value="Urgent">Urgent</option>
+                    <option value="Normal">Medium</option>
+                    <option value="Urgent">High</option>
                     <option value="Très urgent">Highest</option>
-                    <option value="Terminée">Terminée</option>
+                    <option value="Terminée">Finished</option>
                 </select>
 
                 {/* <Autocomplete
