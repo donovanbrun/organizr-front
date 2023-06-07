@@ -63,7 +63,7 @@ export default function Nav() {
     }
 
     const usernameText = process.env.NEXT_PUBLIC_OFFLINE_MODE === "true" ? "Offline mode" :
-                        username !== null ? "Connected as " + username : "Not connected";
+        username !== null ? "Connected as " + username : "Not connected";
 
     return (
         <div className={styles.Nav}>
@@ -75,9 +75,11 @@ export default function Nav() {
                 <Link href="/notebook" className={styles.NavLink}>NOTE</Link>
                 <p className="TextColor">{usernameText}</p>
                 {
-                    username !== null
-                        ? <Link href="/login" onClick={handleLogout} className={styles.NavLink}>LOGOUT</Link>
-                        : <Link href="/login" className={styles.NavLink}>LOGIN</Link>
+                    process.env.NEXT_PUBLIC_OFFLINE_MODE === "false" ?
+                        username !== null
+                            ? <Link href="/login" onClick={handleLogout} className={styles.NavLink}>LOGOUT</Link>
+                            : <Link href="/login" className={styles.NavLink}>LOGIN</Link>
+                        : ''
                 }
                 <button className={styles.DarkmodeButton} onClick={changeMode} >
                     {

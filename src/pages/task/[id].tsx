@@ -73,7 +73,9 @@ export default function EditTask() {
         <div className="App">
             <Nav></Nav>
             <div className={styles.EditTask}>
-                <Link href="/todo" className='Button'>Back</Link>
+                <div className={styles.BackButton}>
+                    <Link href="/todo" className='Button'>Back</Link>
+                </div>
                 <h1 className='title'>Task Editing</h1>
                 <div className={styles.TaskFormModal}>
                     <h3 className='TextColor'>Name</h3>

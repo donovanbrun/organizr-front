@@ -140,7 +140,7 @@ export default function TaskManager() {
                     </div>
                 </div>
 
-                <button className='Button' onClick={() => handleOpenModal(null, true)}>Add</button>
+                <button className='Button' onClick={() => handleOpenModal(null, true)}>Create a task</button>
 
                 <div className={styles.Area2}>
                     <h2 className="subtitle">Finished</h2>
