@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import Toast from "../components/Toast";
+import Task from "../models/task";
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,7 +21,7 @@ export const getTask = (id) => {
     })
 }
 
-export const addTask = (task) => {
+export const addTask = (task: Task) => {
     return axios.post(apiURL+"/api/task/add", task)
     .then((response) => {
         if (response.status >= 200 && response.status < 300) {
@@ -32,7 +33,7 @@ export const addTask = (task) => {
     })
 }
 
-export const updateTask = (task) => {
+export const updateTask = (task: Task) => {
     return axios.put(apiURL+"/api/task/update", task).then((response) => {
         if (response.status >= 200 && response.status < 300) {
             Toast.success("Task updated")

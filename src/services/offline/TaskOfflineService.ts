@@ -1,4 +1,6 @@
-let tasks = [];
+import Task from "../../models/task";
+
+let tasks: Task[] = [];
 
 export const getTasks = (tags) => {
     return new Promise((resolve) => {
@@ -21,7 +23,7 @@ export const getTask = (id) => {
     });
 }
 
-export const addTask = (task) => {
+export const addTask = (task: Task) => {
     return new Promise((resolve) => {
         tasks.push(task);
         if (typeof window !== "undefined") localStorage.setItem("task", JSON.stringify(tasks));
@@ -29,7 +31,8 @@ export const addTask = (task) => {
     });
 }
 
-export const updateTask = (task) => {
+export const updateTask = (task: Task) => {
+    task.modificationDate = new Date();
     return new Promise((resolve) => {
         tasks = tasks.map((t) => {
             if (t.id === task.id) {

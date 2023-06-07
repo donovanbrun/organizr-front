@@ -10,20 +10,21 @@ import { getTags } from '../services/TagService';
 import { Autocomplete, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import Task from '../models/task';
 
 export default function TaskManager() {
 
-    const [tasks, setTasks] = useState([]);
+    const [tasks, setTasks]: [Task[], any] = useState([]);
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
-    const [selectedTask, setSelectedTask] = useState(null);
+    const [selectedTask, setSelectedTask]: [Task, any] = useState(null);
     const [isNewTask, setIsNewTask] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [displayFinishTasks, setDisplayFinishTasks] = useState(false);
 
     let fetchData = () => {
         getTasks(selectedTags).then((tasksData: AxiosResponse) => {
-            let tasks = tasksData.data;
+            let tasks: Task[] = tasksData.data;
 
             tasks.sort((a, b) => {
                 if (a.deadline < b.deadline) {
@@ -51,17 +52,7 @@ export default function TaskManager() {
         setShowModal(true);
         if (isNew) {
             setIsNewTask(true);
-            setSelectedTask({
-                id: uuidv4(),
-                userId: getUserId(),
-                name: '',
-                description: '',
-                deadline: '',
-                status: 'Normal',
-                creationDate: '',
-                modificationDate: '',
-                tags: []
-            })
+            setSelectedTask(new Task(uuidv4(), getUserId(), '', '', new Date(), 'Normal', new Date(), new Date(), []));
         }
         else {
             setIsNewTask(false);
@@ -90,16 +81,17 @@ export default function TaskManager() {
     const normal = [];
     const terminee = [];
 
-    let taskDisplay = (task) => {
+    let taskDisplay = (task: Task) => {
+        const d = new Date(task.deadline);
         return (
             <div className={styles.Task} onClick={e => handleOpenModal(task)}>
                 <p className={styles.TaskName}>{task.name}</p>
-                <p className={styles.TaskDate}>{task.deadline !== null ? (new Date(task.deadline)).toLocaleDateString() : ""}</p>
+                <p className={styles.TaskDate}>{d.toLocaleDateString()}</p>
             </div>
         )
     }
 
-    tasks.forEach(task => {
+    tasks.forEach((task: Task) => {
         if (task.status === "Très urgent") {
             tresUrgent.push(taskDisplay(task))
         }
@@ -174,7 +166,7 @@ export default function TaskManager() {
 
 function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
 
-    const [task, setTask] = useState(selectedTask);
+    const [task, setTask]: [Task, any] = useState(selectedTask);
     const [tags, setTags] = useState([]);
 
     let fetchTags = () => {
