@@ -5,20 +5,11 @@ import styles from '../../styles/EditTask.module.css';
 //import { getTask, updateTask, deleteTask } from '../../services/TaskService';
 import { getTask, updateTask, deleteTask } from '../../services/offline/TaskOfflineService';
 import Nav from '../../components/nav/Nav';
+import Task from '../../models/task';
 
 export default function EditTask() {
 
-    const [task, setTask] = useState({
-        id: '',
-        userId: '',
-        name: '',
-        description: '',
-        deadline: '',
-        status: '',
-        creationDate: '',
-        modificationDate: '',
-        tags: []
-    });
+    const [task, setTask]: [Task, any] = useState(new Task());
 
     const router = useRouter()
     const { id } = router.query
