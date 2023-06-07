@@ -16,23 +16,13 @@ export default function TaskManager() {
     const [tasks, setTasks] = useState([]);
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
-    const [newTask, setNewTask] = useState({
-        id: uuidv4(),
-        userId: getUserId(),
-        name: '',
-        description: '',
-        deadline: '',
-        status: '',
-        creationDate: '',
-        modificationDate: '',
-        tags: []
-    });
     const [selectedTask, setSelectedTask] = useState(null);
+    const [isNewTask, setIsNewTask] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [displayFinishTasks, setDisplayFinishTasks] = useState(false);
 
     let fetchData = () => {
-        getTasks(selectedTags).then((tasksData: AxiosResponse)  => {
+        getTasks(selectedTags).then((tasksData: AxiosResponse) => {
             let tasks = tasksData.data;
 
             tasks.sort((a, b) => {
@@ -48,60 +38,35 @@ export default function TaskManager() {
             setTasks(tasks);
         });
 
-        getTags().then((res) => {
-            setTags(res?.data)
-        });
+        // getTags().then((res) => {
+        //     setTags(res?.data)
+        // });
     }
 
     useEffect(() => {
         fetchData()
     }, [])
 
-    let handleAddTask = () => {
-
-        if (newTask.name !== undefined && newTask.name !== "") {
-
-            if (newTask.status === "") newTask.status = "Normal"
-            addTask(newTask).then(fetchData);
-
-            setNewTask({
+    let handleOpenModal = (task, isNew = false) => {
+        setShowModal(true);
+        if (isNew) {
+            setIsNewTask(true);
+            setSelectedTask({
                 id: uuidv4(),
                 userId: getUserId(),
                 name: '',
                 description: '',
                 deadline: '',
-                status: '',
+                status: 'Normal',
                 creationDate: '',
                 modificationDate: '',
                 tags: []
-            });
+            })
         }
-    }
-
-    let newTaskNameChanged = (event) => {
-        setNewTask({
-            ...newTask,
-            name: event.target.value
-        });
-    }
-
-    let newTaskStatusChanged = (event) => {
-        setNewTask({
-            ...newTask,
-            status: event.target.value
-        });
-    }
-
-    let newTaskDeadlineChanged = (event) => {
-        setNewTask({
-            ...newTask,
-            deadline: event.target.value
-        });
-    }
-
-    let handleOpenModal = (task) => {
-        setShowModal(true);
-        setSelectedTask(task);
+        else {
+            setIsNewTask(false);
+            setSelectedTask(task);
+        }
     }
 
     let handleCloseModal = () => {
@@ -183,17 +148,7 @@ export default function TaskManager() {
                     </div>
                 </div>
 
-                <div className={styles.AddTask}>
-                    <input type="text" className="Input" placeholder='Name' value={newTask.name} id="newTaskName" onChange={newTaskNameChanged} />
-                    <input type="date" className="Input" placeholder='Date' value={newTask.deadline} id="newTaskDate" onChange={newTaskDeadlineChanged} />
-                    <select className="Input" name="status" value={newTask.status} onChange={newTaskStatusChanged}>
-                        <option value="Normal" selected>Medium</option>
-                        <option value="Urgent">High</option>
-                        <option value="Très urgent">Highest</option>
-                        <option value="Terminée">Finished</option>
-                    </select>
-                    <button className="Button" onClick={handleAddTask}>Add</button>
-                </div>
+                <button className='Button' onClick={() => handleOpenModal(null, true)}>Add</button>
 
                 <div className={styles.Area2}>
                     <h2 className="subtitle">Finished</h2>
@@ -206,26 +161,26 @@ export default function TaskManager() {
 
                 </div>
 
-                <button className="Button" onClick={exportTask}>Export</button>
+                {/* <button className="Button" onClick={exportTask}>Export</button> */}
 
                 <ReactModal isOpen={showModal} className={styles.Modal}>
-                    <TaskModal selectedTask={selectedTask} closeModal={handleCloseModal} />
-                    <button className="Button" onClick={handleCloseModal}>Close</button>
+                    <TaskModal selectedTask={selectedTask} closeModal={handleCloseModal} isNewTask={isNewTask} />
+                    <button className='Button' onClick={handleCloseModal}>Close</button>
                 </ReactModal>
             </div>
         </div>
     )
 }
 
-function TaskModal({ selectedTask, closeModal }) {
+function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
 
     const [task, setTask] = useState(selectedTask);
     const [tags, setTags] = useState([]);
 
     let fetchTags = () => {
-        getTags().then((res) => {
-            setTags(res?.data)
-        })
+        // getTags().then((res) => {
+        //     setTags(res?.data)
+        // })
     }
 
     useEffect(() => {
@@ -265,6 +220,12 @@ function TaskModal({ selectedTask, closeModal }) {
         })
     };
 
+    let handleCreateTask = () => {
+        if (task?.name !== undefined && task?.name !== "") {
+            addTask(task).then(closeModal);
+        }
+    }
+
     let handleUpdateTask = () => {
         if (task?.name !== undefined && task?.name !== "") {
             updateTask(task).then(closeModal);
@@ -284,14 +245,18 @@ function TaskModal({ selectedTask, closeModal }) {
 
     return (
         <div className={styles.TaskModal}>
-            <h1 className='title'>Task Editing</h1>
+            {
+                !isNewTask
+                    ? <h1 className='title'>Task Editing</h1>
+                    : <h1 className='title'>Task Creation</h1>
+            }
             <div className={styles.TaskFormModal}>
                 <h3>Name</h3>
-                <input type='text' className='Input' value={task.name} onChange={handleNameChanged} />
+                <input type='text' className='Input' value={task?.name} onChange={handleNameChanged} />
                 <h3>Deadline</h3>
-                <input type='date' className='Input' value={formatDate(task.deadline)} onChange={handleDeadlineChanged} />
+                <input type='date' className='Input' value={formatDate(task?.deadline)} onChange={handleDeadlineChanged} />
                 <h3>Status</h3>
-                <select className='Input' name="status" value={task.status} onChange={handleStatusChanged}>
+                <select className='Input' name="status" value={task?.status} onChange={handleStatusChanged}>
                     <option value="Normal">Medium</option>
                     <option value="Urgent">High</option>
                     <option value="Très urgent">Highest</option>
@@ -309,15 +274,27 @@ function TaskModal({ selectedTask, closeModal }) {
                     )}
                 /> */}
             </div>
-            <div className={styles.TaskModalDate}>
-                <p>Creation : {(new Date(task.creationDate)).toLocaleString()}</p>
-                <p>Modification : {(new Date(task.modificationDate)).toLocaleString()}</p>
-            </div>
-            <div className={styles.TaskModalButtons}>
-                <Link href={"/task/" + task.id} className='Button'>Open</Link>
-                <button className='Button' onClick={handleUpdateTask}>Save</button>
-                <button className='Button' onClick={handleDeleteTask}>Delete</button>
-            </div>
-        </div>
+            {
+                !isNewTask ?
+                    (
+                        <div className={styles.TaskModalDescription}>
+                            <div className={styles.TaskModalDate}>
+                                <p>Creation : {(new Date(task?.creationDate)).toLocaleString()}</p>
+                                <p>Modification : {(new Date(task?.modificationDate)).toLocaleString()}</p>
+                            </div>
+                            <div className={styles.TaskModalButtons}>
+                                <Link href={"/task/" + task?.id} className='Button'>Open</Link>
+                                <button className='Button' onClick={handleUpdateTask}>Save</button>
+                                <button className='Button' onClick={handleDeleteTask}>Delete</button>
+                            </div>
+                        </div>
+                    )
+                    : (
+                        <div className={styles.TaskModalButtons}>
+                            <button className='Button' onClick={handleCreateTask}>Create</button>
+                        </div>
+                    )
+            }
+        </div >
     )
 }
