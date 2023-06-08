@@ -9,14 +9,14 @@ export default function Object() {
     const [notes, setNotes] = useState([]);
     const [objects, setObjects] = useState([]);
 
-    let fetchData = ()  => {
+    let fetchData = () => {
 
         setObjects([])
 
         getTasks([]).then((tasksData: AxiosResponse) => {
             let taskslist = tasksData.data;
             setTasks(taskslist);
-            
+
             taskslist.forEach(task => {
                 let tmp = {
                     id: task.id,
@@ -24,14 +24,14 @@ export default function Object() {
                     type: "task"
                 }
 
-                setObjects(a => [...a,tmp] );
+                setObjects(a => [...a, tmp]);
             })
         });
 
         getNotes().then((notes: AxiosResponse) => {
             let noteslist = notes.data;
             setNotes(noteslist);
-            
+
             noteslist.forEach(note => {
                 let tmp = {
                     id: note.id,
@@ -39,7 +39,7 @@ export default function Object() {
                     type: "note"
                 }
 
-                setObjects(a => [...a,tmp] );
+                setObjects(a => [...a, tmp]);
             })
         });
     }
@@ -47,8 +47,6 @@ export default function Object() {
     useEffect(() => {
         fetchData()
     }, [])
-
-    console.log(objects)
 
     var a = objects.map(object => {
         return (

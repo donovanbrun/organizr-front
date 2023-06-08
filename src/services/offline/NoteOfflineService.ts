@@ -29,6 +29,7 @@ export const saveNote = (note) => {
         else {
             notes = notes.map((n) => {
                 if (n.id === note.id) {
+                    note.updateDate = new Date();
                     return note;
                 }
                 return n;

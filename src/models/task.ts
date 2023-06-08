@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export default class Task {
     id: string;
     userId: string;
@@ -9,7 +11,7 @@ export default class Task {
     modificationDate: Date;
     tags: []
 
-    constructor(id: string = "", userId: string = "", name: string = "", description: string = "", deadline: Date = new Date(), status: string = "Normal", creationDate: Date = new Date(), modificationDate: Date = new Date, tags: [] = []) {
+    constructor(id: string = uuidv4(), userId: string = "", name: string = "", description: string = "", deadline: Date = new Date(), status: string = "Normal", creationDate: Date = new Date(), modificationDate: Date = new Date, tags: [] = []) {
         this.id = id;
         this.userId = userId;
         this.name = name;

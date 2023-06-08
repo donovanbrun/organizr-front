@@ -27,10 +27,10 @@ export default function TaskManager() {
             let tasks: Task[] = tasksData.data;
 
             tasks.sort((a, b) => {
-                if (a.deadline < b.deadline) {
+                if (new Date(a.deadline) < new Date(b.deadline)) {
                     return -1;
                 }
-                if (a.deadline > b.deadline) {
+                if (new Date(a.deadline) > new Date(b.deadline)) {
                     return 1;
                 }
                 return 0;
@@ -156,7 +156,6 @@ export default function TaskManager() {
 
                 <ReactModal isOpen={showModal} className={styles.Modal}>
                     <TaskModal selectedTask={selectedTask} closeModal={handleCloseModal} isNewTask={isNewTask} />
-                    <button className='Button' onClick={handleCloseModal}>Close</button>
                 </ReactModal>
             </div>
         </div>
@@ -286,6 +285,7 @@ function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
                         </div>
                     )
             }
+            <button className='Button' onClick={closeModal}>Close</button>
         </div >
     )
 }
