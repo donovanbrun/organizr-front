@@ -65,7 +65,6 @@ export default function NoteEditor() {
 
     let handleSaveNote = () => {
         if (note.name.trim().length > 0) {
-            console.log(note)
             saveNote(note).then(fetchData);
         }
     }

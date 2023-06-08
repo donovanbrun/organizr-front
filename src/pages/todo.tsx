@@ -71,7 +71,6 @@ export default function TaskManager() {
     }
 
     let handleTagFilter = (event, value) => {
-        console.log(value)
         setSelectedTags(value)
         fetchData();
     }
@@ -213,13 +212,13 @@ function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
     };
 
     let handleCreateTask = () => {
-        if (task?.name !== undefined && task?.name !== "") {
+        if (task?.name !== undefined && task?.name.trim() !== "") {
             addTask(task).then(closeModal);
         }
     }
 
     let handleUpdateTask = () => {
-        if (task?.name !== undefined && task?.name !== "") {
+        if (task?.name !== undefined && task?.name.trim() !== "") {
             updateTask(task).then(closeModal);
         }
     }
