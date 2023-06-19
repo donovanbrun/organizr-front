@@ -14,7 +14,7 @@ export default function Postit() {
         fetchData()
     }, [])
 
-    let fetchData = ()  => {
+    let fetchData = () => {
         getPostit().then((postitsData: AxiosResponse) => {
             let data = postitsData.data;
             let sorted = data.sort((a, b) => {
@@ -58,8 +58,8 @@ export default function Postit() {
     postits.forEach((postit) => {
         postitsDisplay.push(
             <div className={styles.Postit}>
-                <textarea onChange={(event) => handleChange(postit, event)} value={postit.content} spellCheck="false"/>
-                <button onClick={() => handleDelete(postit.id)}>X</button>
+                <textarea onChange={(event) => handleChange(postit, event)} value={postit.content} spellCheck="false" />
+                <button onClick={() => handleDelete(postit.id)}>✕</button>
             </div>
         )
     })

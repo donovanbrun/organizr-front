@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { getTasks } from '../../services/TaskService';
-import { getNotes } from "../../services/NoteService";
+import { getTasks } from '../../services/offline/TaskOfflineService';
+import { getNotes } from "../../services/offline/NoteOfflineService";
 import { AxiosResponse } from 'axios';
+import Task from '../../models/task';
+import Note from '../../models/note';
 
-export default function Object() {
+export default function ObjectComponent() {
 
     const [tasks, setTasks] = useState([]);
     const [notes, setNotes] = useState([]);
@@ -17,11 +19,12 @@ export default function Object() {
             let taskslist = tasksData.data;
             setTasks(taskslist);
 
-            taskslist.forEach(task => {
+            taskslist.forEach((task: Task) => {
                 let tmp = {
                     id: task.id,
                     name: task.name,
-                    type: "task"
+                    type: "task",
+                    updateDate: task.creationDate
                 }
 
                 setObjects(a => [...a, tmp]);
@@ -32,11 +35,12 @@ export default function Object() {
             let noteslist = notes.data;
             setNotes(noteslist);
 
-            noteslist.forEach(note => {
+            noteslist.forEach((note: Note) => {
                 let tmp = {
                     id: note.id,
                     name: note.name,
-                    type: "note"
+                    type: "note",
+                    updateDate: note.updateDate
                 }
 
                 setObjects(a => [...a, tmp]);
@@ -54,6 +58,7 @@ export default function Object() {
                 <td>{object.id}</td>
                 <td>{object.name}</td>
                 <td>{object.type}</td>
+                <td>{object.updateDate}</td>
             </tr>
         )
     })
@@ -66,6 +71,7 @@ export default function Object() {
                         <th>id</th>
                         <th>name</th>
                         <th>type</th>
+                        <th>updateDate</th>
                     </tr>
                 </thead>
                 <tbody>
