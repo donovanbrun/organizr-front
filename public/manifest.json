@@ -1,7 +1,7 @@
 {
     "theme_color": "#4AA97E",
     "background_color": "#062224",
-    "display": "fullscreen",
+    "display": "standalone",
     "scope": "/",
     "start_url": "/",
     "name": "Organizr",
