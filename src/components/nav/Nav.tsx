@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import styles from '../../../styles/Nav.module.css';
-import { getUserId, getUsername, logout } from '../../../services/LoginService';
+import styles from '../../styles/Nav.module.css';
+import { getUserId, getUsername, logout } from '../../services/LoginService';
 import { DARKMODE, LIGHTMODE } from '../../constants';
 import { MdOutlineDarkMode, MdOutlineWbSunny } from 'react-icons/md';
+import { Toaster } from 'react-hot-toast';
+import { AxiosResponse } from 'axios';
 
 export default function Nav() {
 
@@ -39,10 +41,14 @@ export default function Nav() {
         //setDarkmode(localStorage.getItem("darkmode") === "true")
     }
 
-    if (getUserId()) {
-        getUsername().then((response) => {
-            setUsername(response.data)
-        })
+    const userId = getUserId();
+
+    if (userId !== null && username === null) {
+        if (process.env.NEXT_PUBLIC_OFFLINE_MODE !== "true") {
+            getUsername().then((response: AxiosResponse) => {
+                setUsername(response.data)
+            });
+        }
     }
 
     let handleLogout = () => {
@@ -53,21 +59,27 @@ export default function Nav() {
     let changeMode = () => {
         let d = !darkmode
         setDarkmode(d)
-        if (typeof window !== "undefined") localStorage.setItem("darkmode", d)
+        if (typeof window !== "undefined") localStorage.setItem("darkmode", d.valueOf().toString())
     }
+
+    const usernameText = process.env.NEXT_PUBLIC_OFFLINE_MODE === "true" ? "Offline mode" :
+        username !== null ? "Connected as " + username : "Not connected";
 
     return (
         <div className={styles.Nav}>
+            <Toaster />
             <a href='/' className={styles.NavTitle}>Organizr</a>
             <div className={styles.NavLinks}>
                 <Link href="/" className={styles.NavLink}>HOME</Link>
                 <Link href="/todo" className={styles.NavLink}>TASK</Link>
                 <Link href="/notebook" className={styles.NavLink}>NOTE</Link>
-                <p className="TextColor">{username !== null ? "Connected as " + username : "Not connected"}</p>
+                <p className="TextColor">{usernameText}</p>
                 {
-                    username !== null
-                        ? <Link href="/login" onClick={handleLogout} className={styles.NavLink}>LOGOUT</Link>
-                        : <Link href="/login" className={styles.NavLink}>LOGIN</Link>
+                    process.env.NEXT_PUBLIC_OFFLINE_MODE === "false" ?
+                        username !== null
+                            ? <Link href="/login" onClick={handleLogout} className={styles.NavLink}>LOGOUT</Link>
+                            : <Link href="/login" className={styles.NavLink}>LOGIN</Link>
+                        : ''
                 }
                 <button className={styles.DarkmodeButton} onClick={changeMode} >
                     {

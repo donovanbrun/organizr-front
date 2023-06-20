@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { createPostit, deletePostit, getPostit, updatePostit } from '../../../services/PostitService';
-import styles from '../../../styles/Postit.module.css';
+
+import { createPostit, deletePostit, getPostit, updatePostit } from '../../services/offline/PostitOfflineService';
+import styles from '../../styles/Postit.module.css';
 import { v4 as uuidv4 } from 'uuid';
-import { getUserId } from '../../../services/LoginService';
+import { getUserId } from '../../services/LoginService';
+import { AxiosResponse } from 'axios';
 
 export default function Postit() {
 
@@ -12,8 +14,8 @@ export default function Postit() {
         fetchData()
     }, [])
 
-    let fetchData = ()  => {
-        getPostit().then(postitsData => {
+    let fetchData = () => {
+        getPostit().then((postitsData: AxiosResponse) => {
             let data = postitsData.data;
             let sorted = data.sort((a, b) => {
                 if (a.creationDate > b.creationDate) {
@@ -56,8 +58,8 @@ export default function Postit() {
     postits.forEach((postit) => {
         postitsDisplay.push(
             <div className={styles.Postit}>
-                <textarea onChange={(event) => handleChange(postit, event)} value={postit.content} spellCheck="false"/>
-                <button onClick={() => handleDelete(postit.id)}>X</button>
+                <textarea onChange={(event) => handleChange(postit, event)} value={postit.content} spellCheck="false" />
+                <button onClick={() => handleDelete(postit.id)}>✕</button>
             </div>
         )
     })
