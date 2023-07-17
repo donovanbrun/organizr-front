@@ -81,7 +81,7 @@ export default function Nav() {
                             : <Link href="/login" className={styles.NavLink}>LOGIN</Link>
                         : ''
                 }
-                <button className={styles.DarkmodeButton} onClick={changeMode} name='Darkmode'>
+                <button className={styles.DarkmodeButton} onClick={changeMode} title='Darkmode' aria-label="Darkmode">
                     {
                         darkmode ?
                             <MdOutlineWbSunny />
