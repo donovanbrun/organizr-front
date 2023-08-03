@@ -6,8 +6,6 @@ import ReactModal from 'react-modal';
 //import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/TaskService';
 import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/offline/TaskOfflineService';
 import { getUserId } from '../services/LoginService';
-import { getTags } from '../services/TagService';
-import { Autocomplete, TextField } from '@mui/material';
 import { AxiosResponse } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Task from '../models/task';

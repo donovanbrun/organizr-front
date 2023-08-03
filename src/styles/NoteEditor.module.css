@@ -141,6 +141,16 @@
     outline: none;
 }
 
+.TextArea::-webkit-scrollbar {
+  background-color: transparent;
+  width: 4px;
+}
+
+.TextArea::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: var(--accent2-color);
+}
+
 .Modal {
     display: flex;
     align-items: center;
