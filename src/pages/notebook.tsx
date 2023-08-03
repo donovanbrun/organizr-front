@@ -51,6 +51,9 @@ export default function NoteEditor() {
             ...note,
             content: event.target.value
         })
+        if (note.name.trim().length > 0) {
+            saveNote(note).then(fetchData);
+        }
     }
 
     let handleNameChange = (event) => {
@@ -62,12 +65,6 @@ export default function NoteEditor() {
 
     let newNote = () => {
         setNote(new Note(uuidv4(), getUserId(), "", "", new Date()));
-    }
-
-    let handleSaveNote = () => {
-        if (note.name.trim().length > 0) {
-            saveNote(note).then(fetchData);
-        }
     }
 
     let handleDeleteNote = (n: Note) => {
@@ -96,7 +93,6 @@ export default function NoteEditor() {
                                 <input placeholder="Name" value={note?.name} onChange={handleNameChange} className={styles.InputName} />
                             </div>
                             <div className={styles.EditorGroup}>
-                                <button onClick={handleSaveNote} className="Button">Save note</button>
                                 <button onClick={() => handleDeleteNote(null)} className="Button">Delete note</button>
                                 <button onClick={() => setEditMode(!editMode)} className="Button">{editMode ? "Preview mode" : "Edit mode"}</button>
                             </div>
@@ -105,7 +101,7 @@ export default function NoteEditor() {
                         {
                             editMode ?
                                 <div id={styles.Editor}>
-                                    <textarea placeholder="Write here..." rows={note?.content?.split(/\r\n|\r|\n/)?.length} value={note?.content} onChange={handleChange} className={styles.TextArea} spellCheck="false" />
+                                    <textarea placeholder="Write here..." rows={20} value={note?.content} onInputCapture={handleChange} className={styles.TextArea} spellCheck="false" />
                                 </div>
                                 :
                                 <div id={styles.Preview}>

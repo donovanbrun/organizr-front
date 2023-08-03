@@ -135,7 +135,6 @@
     resize: none;
     background-color: var(--primary-color);
     color: var(--color);
-    overflow-y: hidden;
 }
 
 .TextArea:focus {

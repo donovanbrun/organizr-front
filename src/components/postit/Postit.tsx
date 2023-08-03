@@ -58,7 +58,7 @@ export default function Postit() {
     postits.forEach((postit) => {
         postitsDisplay.push(
             <div className={styles.Postit}>
-                <textarea aria-label={postit.content} onChange={(event) => handleChange(postit, event)} value={postit.content} spellCheck="false" />
+                <textarea aria-label={postit.content} onInputCapture={(event) => handleChange(postit, event)} value={postit.content} spellCheck="false" />
                 <button onClick={() => handleDelete(postit.id)}>✕</button>
             </div>
         )
