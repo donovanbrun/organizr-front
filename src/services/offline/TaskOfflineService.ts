@@ -32,7 +32,7 @@ export const addTask = (task: Task) => {
 }
 
 export const updateTask = (task: Task) => {
-    task.modificationDate = new Date();
+    task.updateDate = new Date();
     return new Promise((resolve) => {
         tasks = tasks.map((t) => {
             if (t.id === task.id) {

@@ -6,15 +6,16 @@ import remarkGfm from 'remark-gfm';
 // import { getNotes, saveNote, deleteNote } from "../services/NoteService";
 import { getNotes, saveNote, deleteNote } from "../services/offline/NoteOfflineService";
 import { v4 as uuidv4 } from 'uuid';
-import { getUserId } from '../services/LoginService';
+import { getUser } from '../services/LoginService';
 import { AxiosResponse } from "axios";
 import ReactModal from 'react-modal';
 import Note from "../models/note";
+import { get } from "http";
 
 export default function NoteEditor() {
 
     const [notes, setNotes]: [Note[], any] = useState([]);
-    const [note, setNote]: [Note, any] = useState(new Note(uuidv4(), getUserId(), "", "", new Date()));
+    const [note, setNote]: [Note, any] = useState(new Note(uuidv4(), null, "", "", new Date()));
     const [editMode, setEditMode] = useState(true);
     const [showModal, setShowModal] = useState(false);
 
@@ -64,7 +65,15 @@ export default function NoteEditor() {
     }
 
     let newNote = () => {
-        setNote(new Note(uuidv4(), getUserId(), "", "", new Date()));
+        getUser().then((user) => {
+            setNote({
+                id: uuidv4(),
+                userId: user.id,
+                name: "",
+                content: "",
+                updateDate: new Date()
+            })
+        });
     }
 
     let handleDeleteNote = (n: Note) => {
