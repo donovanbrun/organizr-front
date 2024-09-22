@@ -3,28 +3,26 @@ import Nav from '../components/nav/Nav';
 import styles from '../styles/TaskManager.module.css';
 import Link from 'next/link';
 import ReactModal from 'react-modal';
-//import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/TaskService';
-import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/offline/TaskOfflineService';
-import { getUserId } from '../services/LoginService';
+import { getTasks, addTask, updateTask, deleteTask } from '../services/TaskService';
+//import { getTasks, addTask, updateTask, deleteTask, exportTask } from '../services/offline/TaskOfflineService';
+import { getUser } from '../services/LoginService';
 import { AxiosResponse } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Task from '../models/task';
 
-export default function TaskManager() {
+export default function Board() {
 
     const [tasks, setTasks]: [Task[], any] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [selectedTags, setSelectedTags] = useState([]);
     const [selectedTask, setSelectedTask]: [Task, any] = useState(null);
     const [isNewTask, setIsNewTask] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [displayFinishTasks, setDisplayFinishTasks] = useState(false);
 
     let fetchData = () => {
-        getTasks(selectedTags).then((tasksData: AxiosResponse) => {
-            let tasks: Task[] = tasksData.data;
+        getTasks().then((tasksData: AxiosResponse) => {
+            let tasks: Task[] = tasksData?.data;
 
-            tasks.sort((a, b) => {
+            tasks?.sort((a, b) => {
                 if (new Date(a.deadline) < new Date(b.deadline)) {
                     return -1;
                 }
@@ -36,26 +34,25 @@ export default function TaskManager() {
 
             setTasks(tasks);
         });
-
-        // getTags().then((res) => {
-        //     setTags(res?.data)
-        // });
     }
 
     useEffect(() => {
         fetchData()
     }, [])
 
-    let handleOpenModal = (task, isNew = false) => {
-        setShowModal(true);
+    let handleOpenModal = async (task, isNew = false) => {
+        const user = await getUser();
+        const workspace = JSON.parse(localStorage.getItem("workspace"));
+        console.log(workspace)
         if (isNew) {
             setIsNewTask(true);
-            setSelectedTask(new Task(uuidv4(), getUserId(), '', '', new Date(), 'Normal', new Date(), new Date(), []));
+            setSelectedTask(new Task(uuidv4(), user.id, workspace.id, '', '', new Date(), 'Normal', new Date(), new Date()));
         }
         else {
             setIsNewTask(false);
             setSelectedTask(task);
         }
+        setShowModal(true);
     }
 
     let handleCloseModal = () => {
@@ -68,11 +65,6 @@ export default function TaskManager() {
         setDisplayFinishTasks(!displayFinishTasks);
     }
 
-    let handleTagFilter = (event, value) => {
-        setSelectedTags(value)
-        fetchData();
-    }
-
     const tresUrgent = [];
     const urgent = [];
     const normal = [];
@@ -82,7 +74,7 @@ export default function TaskManager() {
         const d = new Date(task.deadline);
         return (
             <div className={styles.Task} onClick={e => handleOpenModal(task)}>
-                <p className={styles.TaskName}>{task.name}</p>
+                <p className={styles.TaskName}>{task.title}</p>
                 <p className={styles.TaskDate}>{d.toLocaleDateString()}</p>
             </div>
         )
@@ -107,18 +99,7 @@ export default function TaskManager() {
         <div className="App">
             <Nav></Nav>
             <div className={styles.TaskManager}>
-                <h1 className="title">Task Manager</h1>
-
-                {/* <Autocomplete
-                    className={styles.TaskFilter}
-                    multiple
-                    value={selectedTags}
-                    onChange={handleTagFilter}
-                    options={tags}
-                    renderInput={(params) => (
-                        <TextField {...params} label="Filters" />
-                    )}
-                /> */}
+                <h1 className="title">Task Board</h1>
 
                 <div className={styles.Area1}>
                     <div className={styles.TaskArea}>
@@ -147,10 +128,7 @@ export default function TaskManager() {
                             ? <div className={styles.TaskArea}> {terminee} </div>
                             : null
                     }
-
                 </div>
-
-                {/* <button className="Button" onClick={exportTask}>Export</button> */}
 
                 <ReactModal isOpen={showModal} className={styles.Modal}>
                     <TaskModal selectedTask={selectedTask} closeModal={handleCloseModal} isNewTask={isNewTask} />
@@ -163,22 +141,12 @@ export default function TaskManager() {
 function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
 
     const [task, setTask]: [Task, any] = useState(selectedTask);
-    const [tags, setTags] = useState([]);
-
-    let fetchTags = () => {
-        // getTags().then((res) => {
-        //     setTags(res?.data)
-        // })
-    }
-
-    useEffect(() => {
-        fetchTags()
-    }, [])
+    console.log(task)
 
     let handleNameChanged = (event) => {
         setTask({
             ...task,
-            name: event.target.value
+            title: event.target.value
         })
     };
 
@@ -209,26 +177,19 @@ function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
     };
 
     let handleCreateTask = () => {
-        if (task?.name !== undefined && task?.name.trim() !== "") {
+        if (task?.title !== undefined && task?.title.trim() !== "") {
             addTask(task).then(closeModal);
         }
     }
 
     let handleUpdateTask = () => {
-        if (task?.name !== undefined && task?.name.trim() !== "") {
+        if (task?.title !== undefined && task?.title.trim() !== "") {
             updateTask(task).then(closeModal);
         }
     }
 
     let handleDeleteTask = () => {
         deleteTask(task?.id).then(closeModal);
-    }
-
-    let handleTagChanged = (event, value) => {
-        setTask({
-            ...task,
-            tags: value
-        })
     }
 
     return (
@@ -239,8 +200,8 @@ function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
                     : <h1 className='title'>Task Creation</h1>
             }
             <div className={styles.TaskFormModal}>
-                <h3>Name</h3>
-                <input type='text' className='Input' value={task?.name} onChange={handleNameChanged} />
+                <h3>Title</h3>
+                <input type='text' className='Input' value={task?.title} onChange={handleNameChanged} />
                 <h3>Deadline</h3>
                 <input type='date' className='Input' value={formatDate(task?.deadline)} onChange={handleDeadlineChanged} />
                 <h3>Status</h3>
@@ -250,17 +211,6 @@ function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
                     <option value="Très urgent">Highest</option>
                     <option value="Terminée">Finished</option>
                 </select>
-
-                {/* <Autocomplete
-                    multiple
-                    freeSolo
-                    value={task.tags}
-                    onChange={handleTagChanged}
-                    options={tags}
-                    renderInput={(params) => (
-                        <TextField {...params} label="Tags" />
-                    )}
-                /> */}
             </div>
             {
                 !isNewTask ?
@@ -268,7 +218,7 @@ function TaskModal({ selectedTask, closeModal, isNewTask = false }) {
                         <div className={styles.TaskModalDescription}>
                             <div className={styles.TaskModalDate}>
                                 <p>Creation : {(new Date(task?.creationDate)).toLocaleString()}</p>
-                                <p>Modification : {(new Date(task?.modificationDate)).toLocaleString()}</p>
+                                <p>Modification : {(new Date(task?.updateDate)).toLocaleString()}</p>
                             </div>
                             <div className={styles.TaskModalButtons}>
                                 <Link href={"/task/" + task?.id} className='Button'>Open</Link>

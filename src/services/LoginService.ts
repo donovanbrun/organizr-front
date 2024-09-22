@@ -1,42 +1,45 @@
 import axios from "axios";
 import Toast from "../components/Toast";
+import User from "../models/user";
+import axiosInstance from "./Interceptor";
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
-export const getUserId = () => {
+export const getUser = async (): Promise<User> => {
     if (typeof window !== "undefined") {
-        if (process.env.NEXT_PUBLIC_OFFLINE_MODE === "true") {
-            localStorage.setItem("userId", "offline");
-            return "offline";
+        if (localStorage.getItem("user") === null) {
+            const response = await axiosInstance.get("/api/user");
+            localStorage.setItem("user", JSON.stringify(response.data));
+            return response.data;
         }
-        return localStorage.getItem("userId");
+        else {
+            return new Promise((resolve) => {
+                resolve(JSON.parse(localStorage.getItem("user")));
+            });
+        }
     }
-    return null;
 }
 
-export const getUsername = () => {
-    return axios.get(apiURL + "/api/user/username").catch(() => {
-        if (typeof window !== "undefined") localStorage.removeItem("userId");
-    })
-}
-
-export const login = (username, password) => {
-    return axios.post(apiURL + "/api/user/login", {
-        "username": username,
-        "password": password
-    })
-    .then((response) => {
+export const login = async (email, password) => {
+    try {
+        const response = await axios.post(apiURL + "/api/auth/login", {
+            "email": email,
+            "password": password
+        });
         if (response.status >= 200 && response.status < 300) {
-            if (typeof window !== "undefined") localStorage.setItem("userId", response.data)
-            Toast.success("Connected")
+            if (typeof window !== "undefined") {
+                localStorage.setItem("token", response.data.token);
+                localStorage.removeItem("user");
+                getUser();
+            }
+            Toast.success("Connected");
         }
-    })
-    .catch(() => {
-        Toast.error("Connection failed")
-    })
+    } catch {
+        Toast.error("Connection failed");
+    }
 }
 
 export const logout = () => {
-    if (typeof window !== "undefined") localStorage.removeItem("userId");
+    if (typeof window !== "undefined") localStorage.removeItem("token");
     Toast.success("Log out");
 }

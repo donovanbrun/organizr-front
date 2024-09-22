@@ -18,17 +18,17 @@
     cursor: pointer;
 }
 
-.Postit > textarea::-webkit-scrollbar {
+.Postit>textarea::-webkit-scrollbar {
     background-color: transparent;
     width: 2px;
 }
 
-.Postit > textarea::-webkit-scrollbar-thumb {
+.Postit>textarea::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: white;
 }
 
-.Postit > * {
+.Postit>* {
     color: var(--color);
     text-align: center;
     font-size: 1.5em;
@@ -40,16 +40,16 @@
     resize: none;
 }
 
-.Postit > button {
+.Postit>button {
     height: fit-content;
     padding: 2px;
 }
 
-.Postit > button:hover {
+.Postit>button:hover {
     color: red;
 }
 
-.CreatePostit > * {
+.CreatePostit>* {
     height: fit-content;
     width: fit-content;
     font-size: 8em;

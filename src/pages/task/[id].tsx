@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import styles from '../../styles/EditTask.module.css';
-//import { getTask, updateTask, deleteTask } from '../../services/TaskService';
-import { getTask, updateTask, deleteTask } from '../../services/offline/TaskOfflineService';
+import { getTask, updateTask, deleteTask } from '../../services/TaskService';
+//import { getTask, updateTask, deleteTask } from '../../services/offline/TaskOfflineService';
 import Nav from '../../components/nav/Nav';
 import Task from '../../models/task';
 
@@ -11,8 +11,8 @@ export default function EditTask() {
 
     const [task, setTask]: [Task, any] = useState(new Task());
 
-    const router = useRouter()
-    const { id } = router.query
+    const router = useRouter();
+    const { id, from } = router.query;
 
     useEffect(() => {
         fetchData()
@@ -58,9 +58,9 @@ export default function EditTask() {
     };
 
     let handleUpdateTask = () => {
-        if (task?.name !== undefined && task?.name !== "") {
+        if (task?.title !== undefined && task?.title !== "") {
             updateTask(task);
-            router.push('/todo')
+            router.push(decodeURIComponent(from.toString()));
         }
     }
 
@@ -78,8 +78,8 @@ export default function EditTask() {
                 </div>
                 <h1 className='title'>Task Editing</h1>
                 <div className={styles.TaskFormModal}>
-                    <h3 className='TextColor'>Name</h3>
-                    <input type='text' className='Input' value={task.name} onChange={handleNameChanged} />
+                    <h3 className='TextColor'>{task.title}</h3>
+                    <input type='text' className='Input' value={task.title} onChange={handleNameChanged} />
                     <h3 className='TextColor'>Deadline</h3>
                     <input type='date' className='Input' value={formatDate(task.deadline)} onChange={handleDeadlineChanged} />
                     <h3 className='TextColor'>Status</h3>
@@ -94,7 +94,7 @@ export default function EditTask() {
                 </div>
                 <div className={styles.TaskModalDate}>
                     <p className='TextColor'>Creation : {(new Date(task.creationDate)).toLocaleString()}</p>
-                    <p className='TextColor'>Modification : {(new Date(task.modificationDate)).toLocaleString()}</p>
+                    <p className='TextColor'>Modification : {(new Date(task.updateDate)).toLocaleString()}</p>
                 </div>
                 <div className={styles.TaskModalButtons}>
                     <button className='Button' onClick={handleUpdateTask}>Save</button>

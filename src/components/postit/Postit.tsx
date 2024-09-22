@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import { createPostit, deletePostit, getPostit, updatePostit } from '../../services/offline/PostitOfflineService';
+//import { createPostit, deletePostit, getPostit, updatePostit } from '../../services/offline/PostitOfflineService';
+import { createPostit, deletePostit, getPostit, updatePostit } from '../../services/PostitService';
 import styles from '../../styles/Postit.module.css';
-import { v4 as uuidv4 } from 'uuid';
-import { getUserId } from '../../services/LoginService';
 import { AxiosResponse } from 'axios';
 
 export default function Postit() {
@@ -31,18 +30,20 @@ export default function Postit() {
     }
 
     let create = () => {
+        const workspace = JSON.parse(localStorage.getItem("workspace"));
         createPostit({
-            id: uuidv4(),
+            workspaceId: workspace?.id,
             content: "",
-            userId: getUserId()
         }).then(fetchData)
     }
 
     let handleChange = (postit, event) => {
+        const workspace = JSON.parse(localStorage.getItem("workspace"));
         if (event.target.value?.length < 255) {
             updatePostit({
                 id: postit.id,
                 content: event.target.value,
+                workspaceId: workspace?.id,
                 userId: postit.userId,
                 creationDate: postit.creationDate
             }).then(fetchData)

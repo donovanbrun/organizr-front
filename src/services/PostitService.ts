@@ -1,29 +1,29 @@
 import axios from "axios";
 import Toast from "../components/Toast";
-
-const apiURL = process.env.NEXT_PUBLIC_API_URL;
+import axiosInstance from "./Interceptor";
 
 export const getPostit = () => {
-    return axios.get(apiURL+"/api/postit");
+    const workspace = JSON.parse(localStorage.getItem("workspace"));
+    return axiosInstance.get("/api/postit?workspace=" + workspace.id);
 }
 
 export const createPostit = (postit) => {
-    return axios.post(apiURL+"/api/postit/create", postit)
-    .catch(() => {
-        Toast.error("Error while adding postit")
-    })
+    return axiosInstance.post("/api/postit", postit)
+        .catch(() => {
+            Toast.error("Error while adding postit")
+        })
 }
 
 export const updatePostit = (postit) => {
-    return axios.put(apiURL+"/api/postit/update", postit)
-    .catch(() => {
-        Toast.error("Error while updating postit")
-    })
+    return axiosInstance.put("/api/postit", postit)
+        .catch(() => {
+            Toast.error("Error while updating postit")
+        })
 }
 
 export const deletePostit = (id) => {
-    return axios.delete(apiURL+"/api/postit/delete/"+id)
-    .catch(() => {
-        Toast.error("Error while deleting postit")
-    })
+    return axiosInstance.delete("/api/postit/" + id)
+        .catch(() => {
+            Toast.error("Error while deleting postit")
+        })
 }
