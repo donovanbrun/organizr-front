@@ -43,8 +43,7 @@ export default function List() {
         <div className="App">
             <Nav></Nav>
             <div>
-
-                <h1>Tasks</h1>
+                <h1 className="title">Tasks</h1>
                 <table>
                     <thead>
                         <tr>

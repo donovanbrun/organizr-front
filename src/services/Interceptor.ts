@@ -12,6 +12,9 @@ axiosInstance.interceptors.request.use(
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
+        else if (['/auth/login', '/auth/register'].indexOf(config.url) === -1) {
+            window.location.href = '/login';
+        }
 
         return config;
     },

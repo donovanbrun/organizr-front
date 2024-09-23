@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Nav from "../components/nav/Nav";
 import { addUser, getWorkspaceUsers } from "../services/WorkspaceService";
+import styles from "../styles/Settings.module.css";
 
 export default function Settings() {
 
@@ -37,34 +38,34 @@ export default function Settings() {
         <div className="App">
             <Nav></Nav>
             <div>
-                <h1>Settings</h1>
-                <h2>Workspace</h2>
-                <p>{users.length} users</p>
-                <div>
+                <h1 className="title">Settings</h1>
+                <h2 className="subtitle">Workspace</h2>
+                <p className="TextColor">{users.length} users</p>
+                <div className={styles.users}>
                     {
                         users.map(u =>
                         (
-                            <div key={u?.id}>
+                            <div key={u?.id} className="TextColor">
                                 {u?.user.username} - {u?.role}
                             </div>
                         )
                         )
                     }
                 </div>
-                <div>
-                    <input type="text" placeholder="User email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                    <label htmlFor="options-select">Role</label>
+                <div className={styles.addUser}>
+                    <input className="Input" type="text" placeholder="User email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
+                    <label htmlFor="options-select" className="TextColor">Role</label>
                     <select
                         id="options-select"
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
-                        className="select-input"
+                        className="Input"
                     >
                         <option value="VIEWER">Viewer</option>
                         <option value="MEMBER">Member</option>
                         <option value="OWNER">Owner</option>
                     </select>
-                    <button onClick={handleAddUser}>Invite</button>
+                    <button onClick={handleAddUser} className="Button">Invite</button>
                 </div>
             </div>
         </div>

@@ -60,13 +60,14 @@ export default function EditTask() {
     let handleUpdateTask = () => {
         if (task?.title !== undefined && task?.title !== "") {
             updateTask(task);
-            router.push(decodeURIComponent(from.toString()));
+            //router.push(decodeURIComponent(from.toString()));
+            router.push('/board');
         }
     }
 
     let handleDeleteTask = () => {
         deleteTask(task?.id);
-        router.push('/todo')
+        router.push('/board');
     }
 
     return (
@@ -74,7 +75,7 @@ export default function EditTask() {
             <Nav></Nav>
             <div className={styles.EditTask}>
                 <div className={styles.BackButton}>
-                    <Link href="/todo" className='Button'>Back</Link>
+                    <Link href="/board" className='Button'>Back</Link>
                 </div>
                 <h1 className='title'>Task Editing</h1>
                 <div className={styles.TaskFormModal}>
