@@ -9,6 +9,12 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
+        const expiration = localStorage.getItem('expiration');
+        if (expiration && new Date(expiration) < new Date()) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('expiration');
+            window.location.href = '/login';
+        }
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }

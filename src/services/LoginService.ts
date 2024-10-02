@@ -29,6 +29,7 @@ export const login = async (email, password) => {
         if (response.status >= 200 && response.status < 300) {
             if (typeof window !== "undefined") {
                 localStorage.setItem("token", response.data.token);
+                localStorage.setItem("expiration", response.data.expiration);
                 localStorage.removeItem("user");
                 getUser();
             }
