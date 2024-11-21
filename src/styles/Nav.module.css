@@ -1,0 +1,72 @@
+.Nav {
+    background-color: var(--primary-color);
+    height: 97vh;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0px;
+}
+
+.NavTitle {
+    color: var(--color);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: x-large;
+    margin-bottom: 10px;
+}
+
+.NavGroups {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    height: 100%;
+    width: 100%;
+}
+
+.NavLinks {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.NavLink {
+    color: var(--color);
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    padding: 10px;
+    text-decoration: none;
+    width: 80%;
+}
+
+.NavLink:hover {
+    background-color: var(--accent2-color);
+}
+
+.DarkmodeButton {
+    border: none;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .Nav {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .NavLinks {
+        margin: 0px;
+        width: 100%;
+        overflow-x: auto;
+    }
+}
